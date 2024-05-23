@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:expancetracker/auth/signup.dart';
-import 'package:expancetracker/screens/admin/screens/employees.dart';
-import 'package:expancetracker/screens/emloyee/bottom_nav/bottom_user.dart';
-import 'package:expancetracker/screens/emloyee/homescreen.dart';
+import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/services/usercontroller.dart';
+
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/cliper.dart';
@@ -10,6 +12,7 @@ import 'package:expancetracker/widgets/textformwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class LogginPage extends StatefulWidget {
   const LogginPage({super.key});
@@ -128,45 +131,45 @@ class _LogginPageState extends State<LogginPage> {
                               height: HelperWh.H(context) * .030,
                             ),
 
-                            Containerwidget(
-                              height: HelperWh.H(context) * .100,
-                              width: double.infinity,
-                              text: 'Sign in',
-                              fontsize: HelperWh.W(context) * .070,
-                              ontap: () {
-                                if (formKey.currentState!.validate()) {
-                                  Navigator.push(
+                            Consumer<Authcontroller>(
+                                builder: (context, instance, _) {
+                              return Containerwidget(
+                                height: HelperWh.H(context) * .100,
+                                width: double.infinity,
+                                text: 'Sign in',
+                                fontsize: HelperWh.W(context) * .070,
+                                ontap: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    await instance.signin(
+                                      emailController.text,
+                                      passwordController.text,
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BottomnavWidgetUser(
-                                          indexnum: 0,
-                                        ),
-                                      ));
-                                }
-                              },
-                            ),
+                                    );
+                                  }
+                                },
+                              );
+                            }),
                             SizedBox(
                               height: HelperWh.H(context) * .020,
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SignupScreen(),
-                                        ));
-                                  },
-                                  child: Text(
-                                    'Donthave an acoount?',
-                                    style: TextStyle(
-                                        color: colours.greydark,
-                                        fontSize: HelperWh.W(context) * .030),
-                                  ),
-                                ),
+                                //       GestureDetector(
+                                //         onTap: () {
+                                //           Navigator.push(
+                                //               context,
+                                //               MaterialPageRoute(
+                                //                 builder: (context) => SignupScreen(),
+                                //               ));
+                                //         },
+                                //         child: Text(
+                                //           'Donthave an acoount?',
+                                //           style: TextStyle(
+                                //               color: colours.greydark,
+                                //               fontSize: HelperWh.W(context) * .030),
+                                //         ),
+                                //       ),
                                 Text(
                                   'forgot password',
                                   style: TextStyle(

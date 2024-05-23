@@ -20,7 +20,7 @@ class ElevatedBT extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: colours.black,
+          backgroundColor: Colors.black,
         ),
       ),
     );
