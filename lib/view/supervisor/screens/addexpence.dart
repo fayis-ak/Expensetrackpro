@@ -2,12 +2,16 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expancetracker/models/addexpense.dart';
 import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/containerbutton.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
+import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -323,6 +327,10 @@ class _AddexpenceState extends State<Addexpence> {
   }
 
   TimeOfDay? _selectedTime;
+  String? selectedsite;
+  String? selectedcategory;
+
+  String? selectedpayment;
 
   Future<void> timePicker(BuildContext context) async {
     TimeOfDay? pickedTime = await showTimePicker(
@@ -339,220 +347,242 @@ class _AddexpenceState extends State<Addexpence> {
 
   @override
   Widget build(BuildContext context) {
+    final addexinstance = Provider.of<Firebasecontroller>(context);
     return Scaffold(
-      appBar: Appbarwidget(
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios)),
-        title: 'AddExpence',
-        icone: Icon(Icons.currency_rupee_sharp),
-        onpress: () {},
-      ),
-      body: SingleChildScrollView(child: Consumer<Firebasecontroller>(
-        builder: (context, insatnce, child) {
-          return FutureBuilder(
-            future: insatnce.allSitesview(),
-            builder: (context, snapshot) {
-              final datak = insatnce.site;
-
-              log(datak.length.toString());
-
-              return Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: HelperWh.W(context) * .050,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Name'),
-                        Textformfieldwidget(
-                          controller: nameController,
-                          validation: (value) {},
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Select Site'),
-                        // Container(
-                        //   width: double.infinity,
-                        //   height: HelperWh.H(context) * .080,
-                        //   color: colours.grey,
-                        //   padding: EdgeInsets.symmetric(
-                        //       horizontal: HelperWh.W(context) * .020),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       Text('Mubai'),
-                        //       IconButton(
-                        //           onPressed: () async {
-                        //             await _showMyDialog(
-                        //               context,
-                        //             );
-                        //           },
-                        //           icon: Icon(Icons.keyboard_arrow_down))
-                        //     ],
-                        //   ),
-                        // ),
-                        Container(
+        appBar: Appbarwidget(
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back_ios)),
+          title: 'AddExpence',
+          icone: Icon(Icons.currency_rupee_sharp),
+          onpress: () {},
+        ),
+        body: SingleChildScrollView(child: Consumer<Firebasecontroller>(
+          builder: (context, insatnce, child) {
+            return Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: HelperWh.W(context) * .050,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Name'),
+                      Textformfieldwidget(
+                        controller: nameController,
+                        validation: (value) {},
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Select Site'),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, instance, _) {
+                          return FutureBuilder(
+                              future: insatnce.allSitesview(),
+                              builder: (context, snapshot) {
+                                final datak = instance.site;
+                                return Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: colours.grey,
+                                    borderRadius: BorderRadius.circular(
+                                      HelperWh.W(context) * .010,
+                                    ),
+                                  ),
+                                  child: DropdownButtonFormField(
+                                    value: selectedsite,
+                                    hint: Text('Select site'),
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none),
+                                    icon: Icon(Icons.keyboard_arrow_down),
+                                    items: datak.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        value: e.Sitename,
+                                        child: Text(e.Sitename),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedsite = value as String;
+                                      });
+                                    },
+                                  ),
+                                );
+                              });
+                        },
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Select Category'),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, instance, _) {
+                          return FutureBuilder(
+                              future: instance.fetchCategories(),
+                              builder: (context, snapshot) {
+                                final datak = insatnce.catgory;
+                                return Container(
+                                    width: double.infinity,
+                                    height: HelperWh.H(context) * .080,
+                                    color: colours.grey,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: HelperWh.W(context) * .020),
+                                    child: DropdownButtonFormField(
+                                      hint: Text('Select category'),
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none),
+                                      icon: Icon(Icons.keyboard_arrow_down),
+                                      items: datak.map((e) {
+                                        return DropdownMenuItem<String>(
+                                          value: e.category,
+                                          child: Text(e.category),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedcategory = value as String;
+                                        });
+                                        log('this category select ${selectedcategory}');
+                                      },
+                                    ));
+                              });
+                        },
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Date&Time'),
+                      GestureDetector(
+                        onTap: () async {
+                          timePicker(context);
+                        },
+                        child: Container(
                           width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: colours.grey,
-                            borderRadius: BorderRadius.circular(
-                              HelperWh.W(context) * .010,
-                            ),
+                          height: HelperWh.H(context) * .080,
+                          color: colours.grey,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: HelperWh.W(context) * .020),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('14/2/2024'),
+                              if (_selectedTime != null)
+                                Text(
+                                  _selectedTime!.format(context).toString(),
+                                ),
+                            ],
                           ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Payment Mode'),
+                      Container(
+                          width: double.infinity,
+                          height: HelperWh.H(context) * .080,
+                          color: colours.grey,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: HelperWh.W(context) * .020),
                           child: DropdownButtonFormField(
-                            hint: Text('Select site'),
+                            icon: Icon(Icons.keyboard_arrow_down),
+                            hint: Textwidget(
+                                text: 'Select payment type',
+                                style: TextStyle()),
                             decoration:
                                 InputDecoration(border: InputBorder.none),
-                            icon: Icon(Icons.keyboard_arrow_down),
-                            items: datak.map((e) {
-                              return DropdownMenuItem(
+                            items: payment.map((e) {
+                              return DropdownMenuItem<String>(
                                 value: e,
-                                child: Text(e.Sitename),
+                                child: Text(e),
                               );
                             }).toList(),
-                            onChanged: (value) {},
-                          ),
+                            onChanged: (value) {
+                              selectedpayment = value as String;
+                            },
+                          )),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Amount'),
+                      Textformfieldwidget(
+                        controller: amountController,
+                        validation: (value) {},
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Image'),
+                      Container(
+                        width: double.infinity,
+                        height: HelperWh.H(context) * .080,
+                        color: colours.grey,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: HelperWh.W(context) * .020),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [],
                         ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Select Category'),
-                        Container(
-                          width: double.infinity,
-                          height: HelperWh.H(context) * .080,
-                          color: colours.grey,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: HelperWh.W(context) * .020),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Matrial Purchase'),
-                              IconButton(
-                                  onPressed: () async {},
-                                  icon: Icon(Icons.keyboard_arrow_down))
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Date&Time'),
-                        GestureDetector(
-                          onTap: () async {
-                            timePicker(context);
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: HelperWh.H(context) * .080,
-                            color: colours.grey,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: HelperWh.W(context) * .020),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('14/2/2024'),
-                                if (_selectedTime != null)
-                                  Text(_selectedTime!
-                                      .format(context)
-                                      .toString()),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Payment Mode'),
-                        Container(
-                          width: double.infinity,
-                          height: HelperWh.H(context) * .080,
-                          color: colours.grey,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: HelperWh.W(context) * .020),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Cash'),
-                              IconButton(
-                                onPressed: () async {
-                                  _showMyDialogsec(
-                                    context,
-                                  );
-                                },
-                                icon: Icon(Icons.keyboard_arrow_down),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Amount'),
-                        Textformfieldwidget(
-                          controller: amountController,
-                          validation: (value) {},
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Image'),
-                        Container(
-                          width: double.infinity,
-                          height: HelperWh.H(context) * .080,
-                          color: colours.grey,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: HelperWh.W(context) * .020),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [],
-                          ),
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .030,
-                        ),
-                        Text('Note'),
-                        Textformfieldwidget(
-                          maxlines: 3,
-                          controller: noteController,
-                          validation: (value) {},
-                        ),
-                        SizedBox(
-                          height: HelperWh.H(context) * .050,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: HelperWh.W(context) * .60,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: Text('Add',
-                                    style: TextStyle(color: Colors.white)),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: colours.black,
-                                ),
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Text('Note'),
+                      Textformfieldwidget(
+                        maxlines: 3,
+                        controller: noteController,
+                        validation: (value) {},
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .050,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: HelperWh.W(context) * .60,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                addexinstance
+                                    .addExpense(
+                                  AddExpense(
+                                    name: nameController.text,
+                                    site: selectedsite.toString(),
+                                    category: selectedcategory.toString(),
+                                    datatime: _selectedTime.toString(),
+                                    paymentmode: selectedpayment.toString(),
+                                    Amount: amountController.text,
+                                    Image: '',
+                                    note: noteController.text,
+                                    uid: auth.currentUser!.uid,
+                                  ),
+                                )
+                                    .then((value) {
+                                  SuccsToast(context, 'add expense sucess');
+                                });
+                              },
+                              child: Text('Add',
+                                  style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colours.black,
                               ),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .050,
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      )),
-    );
+                ),
+                SizedBox(
+                  height: HelperWh.H(context) * .050,
+                ),
+              ],
+            );
+          },
+        )));
   }
 }

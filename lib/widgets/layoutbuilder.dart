@@ -19,9 +19,10 @@ class LayoutBuilderCheck extends StatelessWidget {
           return LogginAdmin();
         } else {
           //site supervisor
-          return auth.currentUser!.uid == null
-              ? GetStarted()
-              : BottomnavWidget(indexnum: 0);
+          return
+              // GetStarted();
+
+              GetStarted();
 
           // return HrBottomnav(
           //   indexnum: 0,

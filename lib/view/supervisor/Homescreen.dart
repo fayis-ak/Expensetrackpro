@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:expancetracker/services/firebasecontroller.dart';
 import 'package:expancetracker/view/supervisor/screens/Addcategory.dart';
 import 'package:expancetracker/view/supervisor/screens/Expence.dart';
 import 'package:expancetracker/view/supervisor/screens/addexpence.dart';
@@ -9,6 +12,7 @@ import 'package:expancetracker/widgets/textformwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 Widget SupervisorHomeScreen(context) {
   final searchController = TextEditingController();
@@ -298,47 +302,65 @@ Widget SupervisorHomeScreen(context) {
                           SizedBox(
                             height: HelperWh.H(context) * .020,
                           ),
-                          ListView.separated(
-                              physics: BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          state[index],
-                                          style: TextStyle(
-                                            fontSize:
-                                                HelperWh.W(context) * .050,
+                          Consumer<Firebasecontroller>(
+                            builder: (context, instance, _) {
+                              return FutureBuilder(
+                                future: instance.getExpense(),
+                                builder: (context, snapshot) {
+                                  log('this expense lenght ${snapshot.data.toString()}');
+                                  final data = instance.expence;
+
+                                  return ListView.separated(
+                                    itemCount: data.length,
+                                    physics: BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      log(data[index].name);
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                data[index].name,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      HelperWh.W(context) *
+                                                          .050,
+                                                ),
+                                              ),
+                                              Text(
+                                                '\u{20B9} ${data[index].Amount}',
+                                                style: TextStyle(
+                                                  color: colours.amber,
+                                                  fontSize:
+                                                      HelperWh.W(context) *
+                                                          .050,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Text(
-                                          '\u{20B9} 8500.00',
-                                          style: TextStyle(
-                                            color: colours.amber,
-                                            fontSize:
-                                                HelperWh.W(context) * .050,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      daystatus[index],
-                                      style: TextStyle(color: colours.greydark),
-                                    )
-                                  ],
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: HelperWh.H(context) * .020,
-                                );
-                              },
-                              itemCount: state.length)
+                                          Text(
+                                            data[index].datatime,
+                                            style: TextStyle(
+                                                color: colours.greydark),
+                                          )
+                                        ],
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return SizedBox(
+                                        height: HelperWh.H(context) * .020,
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          )
                         ],
                       ))
                 ],

@@ -5,8 +5,11 @@ class Site {
 
   Site({required this.Sitename, this.id, required this.userid});
 
-  Map<String, dynamic> toJson(uid) =>
-      {'SiteName': Sitename, 'id': uid, 'userid': userid};
+  Map<String, dynamic> toJson(uid) => {
+        'SiteName': Sitename,
+        'id': uid,
+        'userid': userid,
+      };
 
   factory Site.fromJsone(Map<String, dynamic> json) {
     return Site(

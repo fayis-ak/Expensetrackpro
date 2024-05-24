@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:expancetracker/auth/loggin.dart';
 import 'package:expancetracker/services/firebasecontroller.dart';
- 
+import 'package:expancetracker/utils/strings.dart';
+
 import 'package:expancetracker/view/supervisor/screens/accoundinformation.dart';
 import 'package:expancetracker/view/supervisor/screens/feedback.dart';
 import 'package:expancetracker/utils/color.dart';
@@ -190,7 +191,7 @@ class ProfileSiteSuper extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Textwidget(
-                                text: 'User Name',
+                                text: auth.currentUser!.uid,
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             SizedBox(
                               height: HelperWh.H(context) * .010,

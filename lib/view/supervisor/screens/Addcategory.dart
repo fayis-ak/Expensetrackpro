@@ -1,5 +1,7 @@
+import 'package:expancetracker/models/addcategory.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/containerbutton.dart';
@@ -26,7 +28,7 @@ class _AddCategoryState extends State<AddCategory> {
         return Consumer<Firebasecontroller>(
           builder: (context, instance, _) {
             return AlertDialog(
-              title: const Text('Add Site'),
+              title: const Text('Add Category'),
               content: Container(
                 height: HelperWh.H(context) * .20,
                 child: Form(
@@ -36,8 +38,8 @@ class _AddCategoryState extends State<AddCategory> {
                         height: HelperWh.H(context) * .010,
                       ),
                       textformwidget(
-                        controller: instance.sitecontroller,
-                        hint: 'site name',
+                        controller: instance.addcategoryc,
+                        hint: 'Category name',
                         validation: (value) {
                           if (value == null || value.isEmpty) {
                             return 'requred filed';
@@ -52,8 +54,15 @@ class _AddCategoryState extends State<AddCategory> {
                         height: HelperWh.H(context) * .010,
                       ),
                       Containerwidget(
-                        text: 'Add Site',
-                        ontap: () async {},
+                        text: 'Add Cateogry',
+                        ontap: () async {
+                          instance.addcategory(
+                            CategoryMd(
+                              category: instance.addcategoryc.text,
+                              userid: auth.currentUser!.uid,
+                            ),
+                          );
+                        },
                         width: 100,
                         height: 50,
                         fontsize: 10,
@@ -93,9 +102,9 @@ class _AddCategoryState extends State<AddCategory> {
       body: SingleChildScrollView(child: Consumer<Firebasecontroller>(
         builder: (context, instance, _) {
           return FutureBuilder(
-            future: instance.allSitesview(),
+            future: instance.fetchCategories(),
             builder: (context, snapshot) {
-              final single = instance.site;
+              final single = instance.catgory;
 
               return Column(
                 children: [
@@ -138,7 +147,7 @@ class _AddCategoryState extends State<AddCategory> {
                                         Row(
                                           children: [
                                             Textwidget(
-                                                text: single[index].Sitename,
+                                                text: single[index].category,
                                                 style: TextStyle()),
                                             Spacer(),
                                             IconButton(
