@@ -32,7 +32,7 @@ class _EmployeesState extends State<Employees> {
             return AlertDialog(
               title: const Text('Add Employe '),
               content: Container(
-                height: HelperWh.H(context) * .40,
+                // height: HelperWh.H(context) * .40,
                 child: Form(
                   key: instance.formkey,
                   child: Column(
@@ -53,6 +53,32 @@ class _EmployeesState extends State<Employees> {
                       textformwidget(
                         controller: instance.passwordcontroller,
                         hint: 'ser password',
+                        validation: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'requred filed';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .010,
+                      ),
+                      textformwidget(
+                        controller: instance.phonenumber,
+                        hint: 'phone number',
+                        validation: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'requred filed';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .010,
+                      ),
+                      textformwidget(
+                        controller: instance.name,
+                        hint: 'name',
                         validation: (value) {
                           if (value == null || value.isEmpty) {
                             return 'requred filed';
@@ -94,9 +120,22 @@ class _EmployeesState extends State<Employees> {
                               instance.emailcontroller.text,
                               instance.passwordcontroller.text,
                               context,
-                              '',
+                              instance.name.text,
                               _selectedUserType.toString(),
+                              instance.passwordcontroller.text,
                             );
+
+                            //  instance.Signup(
+
+                            // instance.emailcontroller.text,
+                            // instance.passwordcontroller.text,
+                            // context,
+                            // instance.name.text,
+                            // _selectedUserType.toString(),
+                            // instance.phonenumber.text,
+                            // );
+
+                            Navigator.pop(context);
                           }
                         },
                         width: 100,

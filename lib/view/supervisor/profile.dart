@@ -191,7 +191,7 @@ class ProfileSiteSuper extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Textwidget(
-                                text: auth.currentUser!.uid,
+                                text: 'username',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             SizedBox(
                               height: HelperWh.H(context) * .010,

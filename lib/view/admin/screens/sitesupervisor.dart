@@ -87,15 +87,15 @@ class _sitesupervisorState extends State<sitesupervisor> {
                       Containerwidget(
                         text: 'Add employe',
                         ontap: () async {
-                          if (instance.formkey.currentState!.validate()) {
-                            await instance.Signup(
-                              instance.emailcontroller.text,
-                              instance.passwordcontroller.text,
-                              context,
-                              '',
-                              _selectedUserType.toString(),
-                            );
-                          }
+                          // if (instance.formkey.currentState!.validate()) {
+                          //   await instance.Signup(
+                          //     instance.emailcontroller.text,
+                          //     instance.passwordcontroller.text,
+                          //     context,
+                          //     '',
+                          //     _selectedUserType.toString(),
+                          //   );
+                          // }
                         },
                         width: 100,
                         height: 50,

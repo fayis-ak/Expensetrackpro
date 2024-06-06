@@ -1,10 +1,17 @@
+import 'dart:developer';
+
+import 'package:expancetracker/models/feedback.dart';
+import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/widgets/elevatedbt.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
+import 'package:provider/provider.dart';
 
 class FeedbackScreenSitesuper extends StatelessWidget {
   FeedbackScreenSitesuper({super.key});
@@ -63,7 +70,7 @@ class FeedbackScreenSitesuper extends StatelessWidget {
                     height: HelperWh.H(context) * .030,
                   ),
                   Textwidget(
-                    text: 'Name',
+                    text: 'Email',
                     style: TextStyle(
                       color: colours.greydark,
                       fontSize: HelperWh.W(context) * .050,
@@ -86,14 +93,17 @@ class FeedbackScreenSitesuper extends StatelessWidget {
                       fontSize: HelperWh.W(context) * .050,
                     ),
                   ),
-
-                  EmojiFeedback(
-                    animDuration: const Duration(milliseconds: 300),
-                    curve: Curves.bounceIn,
-                    inactiveElementScale: .5,
-                    showLabel: false,
-                    onChanged: (value) {
-                      print(value);
+                  Consumer<Firebasecontroller>(
+                    builder: (context, helper, child) {
+                      return EmojiFeedback(
+                        animDuration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceIn,
+                        inactiveElementScale: .5,
+                        showLabel: false,
+                        onChanged: (value) {
+                          helper.newEmoji(value);
+                        },
+                      );
                     },
                   ),
                   SizedBox(
@@ -130,10 +140,29 @@ class FeedbackScreenSitesuper extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedBT(
-                        text: 'Send Feedback',
-                        width: HelperWh.W(context) * .60,
-                      ),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, helper, child) {
+                          return ElevatedBT(
+                            ontap: () {
+                              helper
+                                  .addFeedback(
+                                FeedBackModel(
+                                  name: nameController.text,
+                                  email: emailController.text,
+                                  exeperinece: helper.newemoji!.toInt(),
+                                  suggest: feedbackController.text,
+                                  uid: auth.currentUser!.uid,
+                                ),
+                              )
+                                  .then((value) {
+                                SuccsToast(context, 'Add feedback');
+                              });
+                            },
+                            text: 'Send Feedback',
+                            width: HelperWh.W(context) * .60,
+                          );
+                        },
+                      )
                     ],
                   ),
                   SizedBox(

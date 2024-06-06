@@ -87,13 +87,13 @@ class _HrState extends State<Hr> {
                         text: 'Add employe',
                         ontap: () async {
                           if (instance.formkey.currentState!.validate()) {
-                            await instance.Signup(
-                              instance.emailcontroller.text,
-                              instance.passwordcontroller.text,
-                              context,
-                              '',
-                              _selectedUserType.toString(),
-                            );
+                            // await instance.Signup(
+                            //   instance.emailcontroller.text,
+                            //   instance.passwordcontroller.text,
+                            //   context,
+                            //   '',
+                            //   _selectedUserType.toString(),
+                            // );
                           }
                         },
                         width: 100,

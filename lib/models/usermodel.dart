@@ -3,6 +3,7 @@ class UserModel {
   String name;
   String email;
   String password;
+  String phone;
   String type;
 
   UserModel({
@@ -11,6 +12,7 @@ class UserModel {
     required this.type,
     required this.email,
     this.uid,
+    required this.phone,
   });
 
   Map<String, dynamic> toJson(uid) => {
@@ -18,7 +20,8 @@ class UserModel {
         'email': email,
         'password': password,
         'usertype': type,
-        'uid': uid
+        'uid': uid,
+        'phonenumber': phone,
       };
 
   factory UserModel.fromJsone(Map<String, dynamic> json) {
@@ -27,7 +30,8 @@ class UserModel {
       password: json['password'],
       type: json['usertype'],
       email: json['email'],
-      uid: json['uid']
+      uid: json['uid'],
+      phone: json['phonenumber'],
     );
   }
 }

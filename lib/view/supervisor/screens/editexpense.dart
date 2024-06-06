@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:expancetracker/models/addexpense.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/appBar.dart';
@@ -10,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class EditExpense extends StatefulWidget {
-  EditExpense({super.key});
+  AddExpenseModel addExpenseModel;
+  EditExpense({super.key, required this.addExpenseModel});
 
   @override
   State<EditExpense> createState() => _EditExpenseState();
@@ -335,6 +337,7 @@ class _EditExpenseState extends State<EditExpense> {
 
   @override
   Widget build(BuildContext context) {
+    nameController = TextEditingController(text: widget.addExpenseModel.name);
     return Scaffold(
       appBar: Appbarwidget(
         leading: GestureDetector(
@@ -377,9 +380,9 @@ class _EditExpenseState extends State<EditExpense> {
                         Text('Mubai'),
                         IconButton(
                             onPressed: () async {
-                              await _showMyDialog(
-                                context,
-                              );
+                              // await _showMyDialog(
+                              //   context,
+                              // );
                             },
                             icon: Icon(Icons.keyboard_arrow_down))
                       ],

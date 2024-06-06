@@ -16,21 +16,6 @@ import 'package:provider/provider.dart';
 
 Widget SupervisorHomeScreen(context) {
   final searchController = TextEditingController();
-  List<String> daystatus = [
-    'Today',
-    'Yeasterday',
-    'Feb 28,2024',
-    'Feb 25,2024',
-    'Feb 22,2024'
-  ];
-
-  List<String> state = [
-    'Malaouram',
-    'Palakad',
-    'Kozhikode',
-    'Trissur',
-    'Malapuram'
-  ];
 
   return SafeArea(
     child: SingleChildScrollView(
@@ -307,7 +292,6 @@ Widget SupervisorHomeScreen(context) {
                               return FutureBuilder(
                                 future: instance.getExpense(),
                                 builder: (context, snapshot) {
-                                  log('this expense lenght ${snapshot.data.toString()}');
                                   final data = instance.expence;
 
                                   return ListView.separated(

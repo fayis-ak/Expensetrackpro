@@ -1,10 +1,14 @@
+import 'package:expancetracker/models/addexpense.dart';
+import 'package:expancetracker/services/firebasecontroller.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';
+import 'package:expancetracker/view/supervisor/screens/addexpence.dart';
 import 'package:expancetracker/view/supervisor/screens/reportone.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ReportSuppervisor extends StatelessWidget {
   const ReportSuppervisor({super.key});
@@ -51,34 +55,67 @@ class ReportSuppervisor extends StatelessWidget {
                   height: HelperWh.H(context) * .030,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: HelperWh.W(context) * .030,
-                  ),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ReportoneCategory(),
-                              ));
-                        },
-                        child: Textwidget(
-                          text: coutry[index],
-                          style: TextStyle(),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: HelperWh.H(context) * .030,
-                      );
-                    },
-                    itemCount: 5,
-                  ),
-                )
+                    padding: EdgeInsets.symmetric(
+                      horizontal: HelperWh.W(context) * .030,
+                    ),
+                    child: Consumer<Firebasecontroller>(
+                      builder: (context, helper, child) {
+                        return StreamBuilder(
+                          stream: helper.getExpensejeberate(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            List<AddExpenseModel> list = [];
+
+                            list = snapshot.data!.docs.map((e) {
+                              return AddExpenseModel.fromJsone(
+                                  e.data() as Map<String, dynamic>);
+                            }).toList();
+
+                            if (snapshot.hasData) {
+                              return list.isEmpty
+                                  ? Center(
+                                      child: Textwidget(
+                                          text: 'no dta', style: TextStyle()),
+                                    )
+                                  : ListView.separated(
+                                      itemCount: list.length,
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReportoneCategory(
+                                                    addExpenseModel:
+                                                        list[index],
+                                                  ),
+                                                ));
+                                          },
+                                          child: Textwidget(
+                                            text: list[index].name,
+                                            style: TextStyle(),
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return SizedBox(
+                                          height: HelperWh.H(context) * .030,
+                                        );
+                                      },
+                                    );
+                            }
+                            return Container();
+                          },
+                        );
+                      },
+                    ))
               ],
             ),
           )

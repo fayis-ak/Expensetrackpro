@@ -1,7 +1,4 @@
-import 'package:expancetracker/view/supervisor/screens/addexpence.dart';
-import 'package:flutter/cupertino.dart';
-
-class AddExpense {
+class AddExpenseModel {
   String? id;
   String name;
   String site;
@@ -9,11 +6,11 @@ class AddExpense {
   String datatime;
   String paymentmode;
   String Amount;
-  String Image;
+  String? Image;
   String note;
   String uid;
 
-  AddExpense({
+  AddExpenseModel({
     this.id,
     required this.name,
     required this.site,
@@ -21,7 +18,7 @@ class AddExpense {
     required this.datatime,
     required this.paymentmode,
     required this.Amount,
-    required this.Image,
+    this.Image,
     required this.note,
     required this.uid,
   });
@@ -35,11 +32,11 @@ class AddExpense {
         'image': Image,
         'note': note,
         'uid': uid,
-        'amout': Amount
+        'amout': Amount,
       };
 
-  factory AddExpense.fromJsone(Map<String, dynamic> json) {
-    return AddExpense(
+  factory AddExpenseModel.fromJsone(Map<String, dynamic> json) {
+    return AddExpenseModel(
       id: json['id'],
       name: json['Name'],
       site: json['site'],

@@ -7,4 +7,5 @@ class controller with ChangeNotifier {
     obscuretext = !obscuretext;
     notifyListeners();
   }
+  
 }

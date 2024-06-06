@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expancetracker/models/addcategory.dart';
 import 'package:expancetracker/models/addexpense.dart';
+import 'package:expancetracker/models/feedback.dart';
 import 'package:expancetracker/models/site.dart';
 import 'package:expancetracker/models/usermodel.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
@@ -60,7 +61,7 @@ class Firebasecontroller with ChangeNotifier {
     snapshot.set(category.toJson(snapshot.id));
   }
 
-  Future addExpense(AddExpense addexpence) async {
+  Future addExpense(AddExpenseModel addexpence) async {
     final snapshot = db.collection('Expense').doc();
 
     snapshot.set(addexpence.toJson(snapshot.id));
@@ -111,7 +112,7 @@ class Firebasecontroller with ChangeNotifier {
     }).toList();
   }
 
-  List<AddExpense> expence = [];
+  List<AddExpenseModel> expence = [];
   Future getExpense() async {
     final snpshot = await db
         .collection('Expense')
@@ -121,7 +122,7 @@ class Firebasecontroller with ChangeNotifier {
     log('this expense');
 
     expence = snpshot.docs.map((e) {
-      return AddExpense.fromJsone(e.data());
+      return AddExpenseModel.fromJsone(e.data());
     }).toList();
 
     // snpshot.listen((snapshotg) {
@@ -163,4 +164,34 @@ class Firebasecontroller with ChangeNotifier {
   //delete
 
   //update
+
+  // get expense
+
+  Stream<QuerySnapshot> getExpensejeberate() {
+    return db.collection('Expense').snapshots();
+  }
+
+  UserModel? userModel;
+  Future getuser(uid) async {
+    final lsnapshot = await db.collection('users').doc(uid).get();
+    if (lsnapshot.exists) {
+      userModel = UserModel.fromJsone(lsnapshot.data()!);
+    }
+  }
+
+  Future addFeedback(FeedBackModel feedbackmodel) async {
+    final snapshot = db.collection('feedback').doc();
+
+    snapshot.set(feedbackmodel.tojsone(snapshot.id));
+  }
+
+  int? newemoji;
+  newEmoji(int value) {
+    newemoji = value;
+    notifyListeners();
+  }
+
+  Stream<QuerySnapshot> getFeedback() {
+    return db.collection('feedback').snapshots();
+  }
 }

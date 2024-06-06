@@ -1,5 +1,6 @@
 import 'package:expancetracker/auth/splash/getstarted.dart';
 import 'package:expancetracker/utils/strings.dart';
+import 'package:expancetracker/view/admin/adminHome.dart';
 import 'package:expancetracker/view/admin/screens/sitesupervisor.dart';
 import 'package:expancetracker/view/hr/Bottomnavigation/bottomnav.dart';
 import 'package:expancetracker/view/supervisor/Homescreen.dart';
@@ -16,7 +17,8 @@ class LayoutBuilderCheck extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600) {
-          return LogginAdmin();
+          return AdminHomeScreen();
+          //  LogginAdmin();
         } else {
           //site supervisor
           return

@@ -1,3 +1,4 @@
+import 'package:expancetracker/models/addexpense.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/elevatedbt.dart';
@@ -5,8 +6,10 @@ import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 
 class ReportoneCategory extends StatelessWidget {
-  const ReportoneCategory({
+  AddExpenseModel addExpenseModel;
+  ReportoneCategory({
     super.key,
+    required this.addExpenseModel,
   });
 
   @override
@@ -41,7 +44,7 @@ class ReportoneCategory extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Mumbai', style: TextStyle()),
+                    Textwidget(text: addExpenseModel.name, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -55,7 +58,7 @@ class ReportoneCategory extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Mumbai', style: TextStyle()),
+                    Textwidget(text: addExpenseModel.site, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -69,7 +72,8 @@ class ReportoneCategory extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Material Purchase', style: TextStyle()),
+                    Textwidget(
+                        text: addExpenseModel.category, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -83,7 +87,8 @@ class ReportoneCategory extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: '12:35 PM', style: TextStyle()),
+                    Textwidget(
+                        text: addExpenseModel.datatime, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -97,7 +102,8 @@ class ReportoneCategory extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Cash', style: TextStyle()),
+                    Textwidget(
+                        text: addExpenseModel.paymentmode, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -111,7 +117,7 @@ class ReportoneCategory extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Mumbai Site Expense', style: TextStyle()),
+                    Textwidget(text: addExpenseModel.note, style: TextStyle()),
                   ],
                 ),
                 SizedBox(

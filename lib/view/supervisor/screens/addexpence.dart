@@ -1,13 +1,16 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expancetracker/models/addexpense.dart';
 import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/services/usercontroller.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/utils/strings.dart';
+import 'package:expancetracker/view/supervisor/bottomnavwidget.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/containerbutton.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
@@ -348,18 +351,21 @@ class _AddexpenceState extends State<Addexpence> {
   @override
   Widget build(BuildContext context) {
     final addexinstance = Provider.of<Firebasecontroller>(context);
+    final imghelper = Provider.of<Authcontroller>(context);
+
     return Scaffold(
-        appBar: Appbarwidget(
-          leading: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back_ios)),
-          title: 'AddExpence',
-          icone: Icon(Icons.currency_rupee_sharp),
-          onpress: () {},
-        ),
-        body: SingleChildScrollView(child: Consumer<Firebasecontroller>(
+      appBar: Appbarwidget(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back_ios)),
+        title: 'AddExpence',
+        icone: Icon(Icons.currency_rupee_sharp),
+        onpress: () {},
+      ),
+      body: SingleChildScrollView(
+        child: Consumer<Firebasecontroller>(
           builder: (context, insatnce, child) {
             return Column(
               children: [
@@ -517,16 +523,30 @@ class _AddexpenceState extends State<Addexpence> {
                         height: HelperWh.H(context) * .030,
                       ),
                       Text('Image'),
-                      Container(
-                        width: double.infinity,
-                        height: HelperWh.H(context) * .080,
-                        color: colours.grey,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: HelperWh.W(context) * .020),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [],
-                        ),
+                      // Consumer<Authcontroller>(
+                      //   builder: (context, instance, child) {
+                      //     return Container(
+                      //       width: double.infinity,
+                      //       height: HelperWh.H(context) * .080,
+                      //       decoration: BoxDecoration(
+                      //           color: colours.grey,
+                      //           image: DecorationImage(
+                      //               image: FileImage(
+                      //                   File(instance.image.toString())))),
+                      //       padding: EdgeInsets.symmetric(
+                      //           horizontal: HelperWh.W(context) * .020),
+                      //     );
+                      //   },
+                      // ),
+                      Consumer<Authcontroller>(
+                        builder: (context, helper, child) {
+                          return ElevatedButton(
+                              onPressed: () {
+                                helper.imagegallery();
+                              },
+                              child: Textwidget(
+                                  text: 'Add image', style: TextStyle()));
+                        },
                       ),
                       SizedBox(
                         height: HelperWh.H(context) * .030,
@@ -547,22 +567,31 @@ class _AddexpenceState extends State<Addexpence> {
                             width: HelperWh.W(context) * .60,
                             child: ElevatedButton(
                               onPressed: () {
+                                log(imghelper.urllink.toString());
+
                                 addexinstance
                                     .addExpense(
-                                  AddExpense(
+                                  AddExpenseModel(
                                     name: nameController.text,
                                     site: selectedsite.toString(),
                                     category: selectedcategory.toString(),
                                     datatime: _selectedTime.toString(),
                                     paymentmode: selectedpayment.toString(),
                                     Amount: amountController.text,
-                                    Image: '',
+                                    Image: imghelper.urllink,
                                     note: noteController.text,
                                     uid: auth.currentUser!.uid,
                                   ),
                                 )
                                     .then((value) {
                                   SuccsToast(context, 'add expense sucess');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BottomnavWidget(
+                                          indexnum: 0,
+                                        ),
+                                      ));
                                 });
                               },
                               child: Text('Add',
@@ -583,6 +612,14 @@ class _AddexpenceState extends State<Addexpence> {
               ],
             );
           },
-        )));
+        ),
+      ),
+    );
+  }
+
+  clearcontrol() {
+    nameController.clear();
+    selectedsite = '';
+    selectedcategory = '';
   }
 }
