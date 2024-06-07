@@ -20,104 +20,104 @@ class Hr extends StatefulWidget {
 class _HrState extends State<Hr> {
   List<String> usertype = ['sitesupervisor', 'Hr', 'Employee'];
   String? _selectedUserType;
-  Future addemploye() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Consumer<Authcontroller>(
-          builder: (context, instance, _) {
-            return AlertDialog(
-              title: const Text('Add Employe '),
-              content: Container(
-                height: HelperWh.H(context) * .40,
-                child: Form(
-                  key: instance.formkey,
-                  child: Column(
-                    children: [
-                      textformwidget(
-                        controller: instance.emailcontroller,
-                        hint: 'User email ',
-                        validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'requred filed';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: HelperWh.H(context) * .010,
-                      ),
-                      textformwidget(
-                        controller: instance.passwordcontroller,
-                        hint: 'ser password',
-                        validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'requred filed';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: HelperWh.H(context) * .010,
-                      ),
-                      DropdownButtonFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'requred filed';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(hintText: 'UserType'),
-                        items: usertype.map((e) {
-                          return DropdownMenuItem(
-                            child: Text(e),
-                            value: e,
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedUserType = value.toString();
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        height: HelperWh.H(context) * .010,
-                      ),
-                      Containerwidget(
-                        text: 'Add employe',
-                        ontap: () async {
-                          if (instance.formkey.currentState!.validate()) {
-                            // await instance.Signup(
-                            //   instance.emailcontroller.text,
-                            //   instance.passwordcontroller.text,
-                            //   context,
-                            //   '',
-                            //   _selectedUserType.toString(),
-                            // );
-                          }
-                        },
-                        width: 100,
-                        height: 50,
-                        fontsize: 10,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('close'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+  // Future addemploye() async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Consumer<Authcontroller>(
+  //         builder: (context, instance, _) {
+  //           return AlertDialog(
+  //             title: const Text('Add Employe '),
+  //             content: Container(
+  //               height: HelperWh.H(context) * .40,
+  //               child: Form(
+  //                 key: instance.formkey,
+  //                 child: Column(
+  //                   children: [
+  //                     textformwidget(
+  //                       controller: instance.emailcontroller,
+  //                       hint: 'User email ',
+  //                       validation: (value) {
+  //                         if (value == null || value.isEmpty) {
+  //                           return 'requred filed';
+  //                         }
+  //                         return null;
+  //                       },
+  //                     ),
+  //                     SizedBox(
+  //                       height: HelperWh.H(context) * .010,
+  //                     ),
+  //                     textformwidget(
+  //                       controller: instance.passwordcontroller,
+  //                       hint: 'ser password',
+  //                       validation: (value) {
+  //                         if (value == null || value.isEmpty) {
+  //                           return 'requred filed';
+  //                         }
+  //                         return null;
+  //                       },
+  //                     ),
+  //                     SizedBox(
+  //                       height: HelperWh.H(context) * .010,
+  //                     ),
+  //                     DropdownButtonFormField(
+  //                       validator: (value) {
+  //                         if (value == null || value.isEmpty) {
+  //                           return 'requred filed';
+  //                         }
+  //                         return null;
+  //                       },
+  //                       decoration: InputDecoration(hintText: 'UserType'),
+  //                       items: usertype.map((e) {
+  //                         return DropdownMenuItem(
+  //                           child: Text(e),
+  //                           value: e,
+  //                         );
+  //                       }).toList(),
+  //                       onChanged: (value) {
+  //                         setState(() {
+  //                           _selectedUserType = value.toString();
+  //                         });
+  //                       },
+  //                     ),
+  //                     SizedBox(
+  //                       height: HelperWh.H(context) * .010,
+  //                     ),
+  //                     Containerwidget(
+  //                       text: 'Add employe',
+  //                       ontap: () async {
+  //                         if (instance.formkey.currentState!.validate()) {
+  //                           // await instance.Signup(
+  //                           //   instance.emailcontroller.text,
+  //                           //   instance.passwordcontroller.text,
+  //                           //   context,
+  //                           //   '',
+  //                           //   _selectedUserType.toString(),
+  //                           // );
+  //                         }
+  //                       },
+  //                       width: 100,
+  //                       height: 50,
+  //                       fontsize: 10,
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: const Text('close'),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -145,29 +145,29 @@ class _HrState extends State<Hr> {
                     onPressed: () {},
                     icon: Icon(Icons.horizontal_split_outlined),
                   ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () async {
-                      await addemploye();
-                    },
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Textwidget(
-                            text: 'Add hr',
-                            style: TextStyle(color: colours.white),
-                          ),
-                          SizedBox(
-                            width: HelperWh.W(context) * .01,
-                          ),
-                          Icon(
-                            Icons.add,
-                            color: colours.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Spacer(),
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //     // await addemploye();
+                  //   },
+                  //   child: Container(
+                  //     child: Row(
+                  //       children: [
+                  //         Textwidget(
+                  //           text: 'Add hr',
+                  //           style: TextStyle(color: colours.white),
+                  //         ),
+                  //         SizedBox(
+                  //           width: HelperWh.W(context) * .01,
+                  //         ),
+                  //         Icon(
+                  //           Icons.add,
+                  //           color: colours.white,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

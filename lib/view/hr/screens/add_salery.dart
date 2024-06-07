@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:expancetracker/models/feedback.dart';
+import 'package:expancetracker/services/firebasecontroller.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/appBar.dart';
@@ -9,6 +11,7 @@ import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class HrAddSalery extends StatefulWidget {
   HrAddSalery({super.key});
@@ -303,16 +306,26 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: HelperWh.W(context) * .60,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Add',
-                              style: TextStyle(color: Colors.white)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colours.black,
-                          ),
-                        ),
-                      ),
+                          width: HelperWh.W(context) * .60,
+                          child: Consumer<Firebasecontroller>(
+                            builder: (context, helper, child) {
+                              return ElevatedButton(
+                                onPressed: () {
+                                  helper.addSalery(FeedBackModel(
+                                      name: nameController.text,
+                                      email: 'email',
+                                      exeperinece: 1,
+                                      suggest: 'suggest',
+                                      uid: 'uid'));
+                                },
+                                child: Text('Add',
+                                    style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: colours.black,
+                                ),
+                              );
+                            },
+                          ),),
                     ],
                   )
                 ],

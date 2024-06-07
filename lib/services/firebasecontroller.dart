@@ -194,4 +194,10 @@ class Firebasecontroller with ChangeNotifier {
   Stream<QuerySnapshot> getFeedback() {
     return db.collection('feedback').snapshots();
   }
+
+  Future addSalery(FeedBackModel feedBackModel) async {
+    final snapshot = db.collection('Addsalery').doc();
+
+    snapshot.set(feedBackModel.tojsone(snapshot.id));
+  }
 }
