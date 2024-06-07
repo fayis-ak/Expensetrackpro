@@ -122,7 +122,7 @@ class _EmployeesState extends State<Employees> {
                               context,
                               instance.name.text,
                               _selectedUserType.toString(),
-                              instance.passwordcontroller.text,
+                              instance.phonenumber.text,
                             );
 
                             //  instance.Signup(

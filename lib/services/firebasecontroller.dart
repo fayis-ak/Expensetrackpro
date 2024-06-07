@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/models/addcategory.dart';
 import 'package:expancetracker/models/addexpense.dart';
 import 'package:expancetracker/models/feedback.dart';
@@ -195,9 +196,36 @@ class Firebasecontroller with ChangeNotifier {
     return db.collection('feedback').snapshots();
   }
 
-  Future addSalery(FeedBackModel feedBackModel) async {
+  Future addSalery(Addsalerymodel addsalerymodel) async {
     final snapshot = db.collection('Addsalery').doc();
 
-    snapshot.set(feedBackModel.tojsone(snapshot.id));
+    snapshot.set(addsalerymodel.tojsone(snapshot.id));
+  }
+
+  Stream<QuerySnapshot> getSalery() {
+    return db.collection('Addsalery').snapshots();
+  }
+
+  Future<Addsalerymodel?> salerGet(uid) async {
+    final snapshot =
+        await db.collection('Addsalery').where('userid', isEqualTo: uid).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return Addsalerymodel.fromjsone(
+          snapshot.docs.first.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
+  }
+
+  UserModel? singleuser;
+  Future<UserModel?> getSingleUser(uid) async {
+    final snapshot = await db.collection('users').doc(uid).get();
+
+    if (snapshot.exists) {
+      return UserModel.fromJsone(snapshot as Map<String, dynamic>);
+    } else {
+      return null;
+    }
   }
 }

@@ -1,4 +1,5 @@
 class Addsalerymodel {
+  String name;
   String userid;
   String salery;
   String saleryadddate;
@@ -7,6 +8,7 @@ class Addsalerymodel {
   String? id;
 
   Addsalerymodel({
+    required this.name,
     required this.userid,
     required this.salery,
     required this.saleryadddate,
@@ -16,6 +18,7 @@ class Addsalerymodel {
   });
 
   Map<String, dynamic> tojsone(idd) => {
+        'name': name,
         'userid': userid,
         'salery': salery,
         'saleryadddate': saleryadddate,
@@ -25,6 +28,7 @@ class Addsalerymodel {
       };
   factory Addsalerymodel.fromjsone(Map<String, dynamic> jsone) {
     return Addsalerymodel(
+      name: jsone['name'],
       userid: jsone['userid'],
       salery: jsone['salery'],
       saleryadddate: jsone['saleryadddate'],

@@ -1,3 +1,6 @@
+import 'package:expancetracker/models/addSalery.dart';
+import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/hr/screens/add_salery.dart';
 import 'package:expancetracker/view/hr/screens/calender.dart';
 import 'package:expancetracker/view/hr/screens/settings.dart';
@@ -10,6 +13,7 @@ import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 Widget HrHomepage(context) {
   final searchController = TextEditingController();
@@ -218,43 +222,85 @@ Widget HrHomepage(context) {
                           SizedBox(
                             height: HelperWh.H(context) * .030,
                           ),
-                          ListView.separated(
-                              physics: BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'arjun',
-                                          style: TextStyle(
-                                            fontSize:
-                                                HelperWh.W(context) * .050,
-                                          ),
-                                        ),
-                                        Text(
-                                          '\u{20B9} 8500.00',
-                                          style: TextStyle(
-                                            color: colours.amber,
-                                            fontSize:
-                                                HelperWh.W(context) * .050,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: HelperWh.H(context) * .020,
-                                );
-                              },
-                              itemCount: 10)
+                          Consumer<Firebasecontroller>(
+                            builder: (context, instance, child) {
+                              return StreamBuilder(
+                                stream: instance.getSalery(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  List<Addsalerymodel> list = [];
+
+                                  list = snapshot.data!.docs.map((e) {
+                                    return Addsalerymodel.fromjsone(
+                                        e.data() as Map<String, dynamic>);
+                                  }).toList();
+
+                                  if (snapshot.hasData) {
+                                    return list.isEmpty
+                                        ? Center(
+                                            child: Text('No user'),
+                                          )
+                                        : ListView.separated(
+                                            itemCount: list.length,
+                                            physics: BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) {
+                                              var user = list[index].userid;
+
+                                              final snapshot = db
+                                                  .collection('users')
+                                                  .doc(user)
+                                                  .snapshots();
+
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        list[index].name,
+                                                        style: TextStyle(
+                                                          fontSize: HelperWh.W(
+                                                                  context) *
+                                                              .050,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '\u{20B9} ${list[index].salery}',
+                                                        style: TextStyle(
+                                                          color: colours.amber,
+                                                          fontSize: HelperWh.W(
+                                                                  context) *
+                                                              .050,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return SizedBox(
+                                                height:
+                                                    HelperWh.H(context) * .020,
+                                              );
+                                            },
+                                          );
+                                  }
+                                  return Container();
+                                },
+                              );
+                            },
+                          )
                         ],
                       ))
                 ],

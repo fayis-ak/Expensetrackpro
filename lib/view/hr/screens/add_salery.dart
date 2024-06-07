@@ -1,9 +1,14 @@
+import 'dart:developer';
 import 'dart:ui';
 
+import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/models/feedback.dart';
 import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/view/hr/Bottomnavigation/bottomnav.dart';
+import 'package:expancetracker/view/hr/homescreen.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/containerbutton.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
@@ -30,6 +35,8 @@ class _HrAddSaleryState extends State<HrAddSalery> {
   TextEditingController noteController = TextEditingController();
 
   TextEditingController timeController = TextEditingController();
+  TextEditingController userid = TextEditingController();
+  TextEditingController incetive = TextEditingController();
 
   List<String> site = [
     ' Mubai',
@@ -207,116 +214,162 @@ class _HrAddSaleryState extends State<HrAddSalery> {
         onpress: () {},
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: HelperWh.W(context) * .050,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: HelperWh.H(context) * .050,
-                  ),
-                  Textwidget(
-                      text: 'User Id',
-                      style: TextStyle(
-                        color: colours.greydark,
-                      )),
-                  Textformfieldwidget(
-                    controller: nameController,
-                    validation: (value) {},
-                  ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .020,
-                  ),
-                  Textwidget(
-                      text: 'Name',
-                      style: TextStyle(
-                        color: colours.greydark,
-                      )),
-                  SizedBox(
-                    height: HelperWh.H(context) * .020,
-                  ),
-                  Textformfieldwidget(
-                    controller: nameController,
-                    validation: (value) {},
-                  ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .020,
-                  ),
-                  Textwidget(
-                      text: 'Salery',
-                      style: TextStyle(
-                        color: colours.greydark,
-                      )),
-                  SizedBox(
-                    height: HelperWh.H(context) * .010,
-                  ),
-                  Textformfieldwidget(
-                    controller: nameController,
-                    validation: (value) {},
-                  ),
-                  Text('Date&Time'),
-                  GestureDetector(
-                    onTap: () async {
-                      timePicker(context);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: HelperWh.H(context) * .080,
-                      color: colours.grey,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: HelperWh.W(context) * .020),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('14/2/2024'),
-                          if (_selectedTime != null)
-                            Text(_selectedTime!.format(context).toString()),
-                        ],
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: HelperWh.W(context) * .050,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: HelperWh.H(context) * .050,
+                    ),
+                    Textwidget(
+                        text: 'User Id',
+                        style: TextStyle(
+                          color: colours.greydark,
+                        )),
+                    Textformfieldwidget(
+                      controller: userid,
+                      validation: (value) {
+                        if (value!.isEmpty) {
+                          return 'required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: HelperWh.H(context) * .020,
+                    ),
+                    Textwidget(
+                        text: 'Name',
+                        style: TextStyle(
+                          color: colours.greydark,
+                        )),
+                    SizedBox(
+                      height: HelperWh.H(context) * .020,
+                    ),
+                    Textformfieldwidget(
+                      controller: nameController,
+                      validation: (value) {
+                        if (value!.isEmpty) {
+                          return 'required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: HelperWh.H(context) * .020,
+                    ),
+                    Textwidget(
+                        text: 'Salery',
+                        style: TextStyle(
+                          color: colours.greydark,
+                        )),
+                    SizedBox(
+                      height: HelperWh.H(context) * .010,
+                    ),
+                    Textformfieldwidget(
+                      controller: amountController,
+                      validation: (value) {
+                        if (value!.isEmpty) {
+                          return 'required';
+                        }
+                        return null;
+                      },
+                    ),
+                    Text('Date&Time'),
+                    GestureDetector(
+                      onTap: () async {
+                        timePicker(context);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: HelperWh.H(context) * .080,
+                        color: colours.grey,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: HelperWh.W(context) * .020),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('14/2/2024'),
+                            if (_selectedTime != null)
+                              Text(_selectedTime!.format(context).toString()),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .030,
-                  ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .030,
-                  ),
-                  Textwidget(text: 'incentive', style: TextStyle()),
-                  Textformfieldwidget(
-                    controller: amountController,
-                    validation: (value) {},
-                  ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .030,
-                  ),
-                  Text('Note'),
-                  Textformfieldwidget(
-                    maxlines: 3,
-                    controller: noteController,
-                    validation: (value) {},
-                  ),
-                  SizedBox(
-                    height: HelperWh.H(context) * .050,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
+                    SizedBox(
+                      height: HelperWh.H(context) * .030,
+                    ),
+                    SizedBox(
+                      height: HelperWh.H(context) * .030,
+                    ),
+                    Textwidget(text: 'incentive', style: TextStyle()),
+                    Textformfieldwidget(
+                      controller: incetive,
+                      validation: (value) {
+                        if (value!.isEmpty) {
+                          return 'required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: HelperWh.H(context) * .030,
+                    ),
+                    Text('Note'),
+                    Textformfieldwidget(
+                      maxlines: 3,
+                      controller: noteController,
+                      validation: (value) {
+                        if (value!.isEmpty) {
+                          return 'required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: HelperWh.H(context) * .050,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
                           width: HelperWh.W(context) * .60,
                           child: Consumer<Firebasecontroller>(
                             builder: (context, helper, child) {
                               return ElevatedButton(
                                 onPressed: () {
-                                  helper.addSalery(FeedBackModel(
-                                      name: nameController.text,
-                                      email: 'email',
-                                      exeperinece: 1,
-                                      suggest: 'suggest',
-                                      uid: 'uid'));
+                                  if (formKey.currentState!.validate()) {
+                                    helper
+                                        .addSalery(
+                                      Addsalerymodel(
+                                        name: nameController.text,
+                                        userid: userid.text,
+                                        salery: amountController.text,
+                                        saleryadddate: _selectedTime!
+                                            .format(context)
+                                            .toString(),
+                                        incetive: incetive.text,
+                                        note: noteController.text,
+                                      ),
+                                    )
+                                        .then((value) {
+                                      SuccsToast(context, 'ADD salery succes');
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HrBottomnav(
+                                              indexnum: 0,
+                                            ),
+                                          ));
+                                    });
+                                  }
                                 },
                                 child: Text('Add',
                                     style: TextStyle(color: Colors.white)),
@@ -325,16 +378,18 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                                 ),
                               );
                             },
-                          ),),
-                    ],
-                  )
-                ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: HelperWh.H(context) * .050,
-            ),
-          ],
+              SizedBox(
+                height: HelperWh.H(context) * .050,
+              ),
+            ],
+          ),
         ),
       ),
     );
