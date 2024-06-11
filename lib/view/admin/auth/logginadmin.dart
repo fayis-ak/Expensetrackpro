@@ -1,4 +1,4 @@
-import 'package:expancetracker/services/controller.dart';
+import 'package:expancetracker/controller/controller.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/admin/adminHome.dart';
@@ -215,17 +215,23 @@ class textformwidget extends StatelessWidget {
   final FormFieldValidator<String> validation;
   final String? hint;
   final TextEditingController? controller;
+  final int? maxlenght;
 
   const textformwidget(
       {super.key,
       this.sufix,
       required this.validation,
       this.hint,
-      this.controller});
+      this.controller,
+      this.maxlenght,
+      });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+       inputFormatters: [
+        LengthLimitingTextInputFormatter(maxlenght)
+       ],
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,

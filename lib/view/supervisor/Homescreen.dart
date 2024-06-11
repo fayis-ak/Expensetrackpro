@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/view/supervisor/screens/Addcategory.dart';
 import 'package:expancetracker/view/supervisor/screens/Expence.dart';
 import 'package:expancetracker/view/supervisor/screens/addexpence.dart';
@@ -8,6 +8,7 @@ import 'package:expancetracker/view/supervisor/screens/addsite.dart';
 import 'package:expancetracker/view/supervisor/screens/calender.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/view/supervisor/screens/settings.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,34 +60,34 @@ Widget SupervisorHomeScreen(context) {
                                     position:
                                         RelativeRect.fromLTRB(100, 100, 0, 0),
                                     items: <PopupMenuEntry>[
-                                      PopupMenuItem(
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                    Icons
-                                                        .calendar_month_rounded,
-                                                    color: colours.white),
-                                                Text(
-                                                  'Calender',
-                                                  style: TextStyle(
-                                                      color: colours.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CalenderScreen(),
-                                              ));
-                                        },
-                                        value: 'data',
-                                      ),
+                                      // PopupMenuItem(
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Row(
+                                      //         children: [
+                                      //           Icon(
+                                      //               Icons
+                                      //                   .calendar_month_rounded,
+                                      //               color: colours.white),
+                                      //           Text(
+                                      //             'Calender',
+                                      //             style: TextStyle(
+                                      //                 color: colours.white),
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      //   onTap: () {
+                                      //     Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //           builder: (context) =>
+                                      //               CalenderScreen(),
+                                      //         ));
+                                      //   },
+                                      //   value: 'data',
+                                      // ),
                                       PopupMenuItem(
                                         child: Row(
                                           children: [
@@ -113,26 +114,26 @@ Widget SupervisorHomeScreen(context) {
                                               ));
                                         },
                                       ),
-                                      PopupMenuItem(
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                    Icons
-                                                        .calendar_month_rounded,
-                                                    color: colours.white),
-                                                Text(
-                                                  'Generated Report',
-                                                  style: TextStyle(
-                                                      color: colours.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        value: 'data',
-                                      ),
+                                      // PopupMenuItem(
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Row(
+                                      //         children: [
+                                      //           Icon(
+                                      //               Icons
+                                      //                   .calendar_month_rounded,
+                                      //               color: colours.white),
+                                      //           Text(
+                                      //             'Generated Report',
+                                      //             style: TextStyle(
+                                      //                 color: colours.white),
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      //   value: 'data',
+                                      // ),
                                       PopupMenuItem(
                                         child: Row(
                                           children: [
@@ -184,24 +185,24 @@ Widget SupervisorHomeScreen(context) {
                                               ));
                                         },
                                       ),
-                                      PopupMenuItem(
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(Icons.currency_rupee_sharp,
-                                                    color: colours.white),
-                                                Text(
-                                                  'Add Payment Mode',
-                                                  style: TextStyle(
-                                                      color: colours.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        value: 'data',
-                                      ),
+                                      // PopupMenuItem(
+                                      //   child: Row(
+                                      //     children: [
+                                      //       Row(
+                                      //         children: [
+                                      //           Icon(Icons.currency_rupee_sharp,
+                                      //               color: colours.white),
+                                      //           Text(
+                                      //             'Add Payment Mode',
+                                      //             style: TextStyle(
+                                      //                 color: colours.white),
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      //   value: 'data',
+                                      // ),
                                       PopupMenuItem(
                                         child: Row(
                                           children: [
@@ -219,6 +220,14 @@ Widget SupervisorHomeScreen(context) {
                                           ],
                                         ),
                                         value: 'data',
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SettingsScreensitesup(),
+                                              ));
+                                        },
                                       ),
                                     ],
                                   );
@@ -328,7 +337,7 @@ Widget SupervisorHomeScreen(context) {
                                             ],
                                           ),
                                           Text(
-                                            data[index].datatime,
+                                            data[index].date,
                                             style: TextStyle(
                                                 color: colours.greydark),
                                           )
@@ -373,7 +382,7 @@ Widget SupervisorHomeScreen(context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '\u{20B9} 2,548.00',
+                      '\u{20B9} 45000',
                       style: TextStyle(
                         color: colours.white,
                         fontWeight: FontWeight.bold,

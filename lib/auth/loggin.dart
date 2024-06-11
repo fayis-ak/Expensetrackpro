@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:expancetracker/auth/signup.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
-import 'package:expancetracker/services/usercontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/controller/usercontroller.dart';
 
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
@@ -99,6 +99,7 @@ class _LogginPageState extends State<LogginPage> {
                                   fontSize: HelperWh.W(context) * .050),
                             ),
                             Textformfieldwidget(
+                              maxlines: 1,
                               controller: emailController,
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
@@ -118,6 +119,7 @@ class _LogginPageState extends State<LogginPage> {
                                   fontSize: HelperWh.W(context) * .050),
                             ),
                             Textformfieldwidget(
+                              maxlines: 1,
                               controller: passwordController,
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
@@ -170,12 +172,12 @@ class _LogginPageState extends State<LogginPage> {
                                 //               fontSize: HelperWh.W(context) * .030),
                                 //         ),
                                 //       ),
-                                Text(
-                                  'forgot password',
-                                  style: TextStyle(
-                                      color: colours.greydark,
-                                      fontSize: HelperWh.W(context) * .030),
-                                ),
+                                // Text(
+                                //   'forgot password',
+                                //   style: TextStyle(
+                                //       color: colours.greydark,
+                                //       fontSize: HelperWh.W(context) * .030),
+                                // ),
                               ],
                             )
                           ],

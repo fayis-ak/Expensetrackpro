@@ -1,9 +1,10 @@
 import 'package:expancetracker/models/addSalery.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/hr/screens/add_salery.dart';
 import 'package:expancetracker/view/hr/screens/calender.dart';
 import 'package:expancetracker/view/hr/screens/settings.dart';
+import 'package:expancetracker/view/hr/screens/singleuserdet.dart';
 import 'package:expancetracker/view/supervisor/screens/addexpence.dart';
 import 'package:expancetracker/view/supervisor/screens/calender.dart';
 import 'package:expancetracker/utils/color.dart';
@@ -28,19 +29,6 @@ Widget HrHomepage(context) {
     'Feb 28,2024',
     'Feb 25,2024',
     'Feb 22,2024',
-  ];
-
-  List<String> state = [
-    'Malaouram',
-    'Palakad',
-    'Kozhikode',
-    'Trissur',
-    'Malapuram',
-    'Malaouram',
-    'Palakad',
-    'Kozhikode',
-    'Trissur',
-    'Malapuram',
   ];
 
   return SafeArea(
@@ -139,32 +127,32 @@ Widget HrHomepage(context) {
                                               ));
                                         },
                                       ),
-                                      PopupMenuItem(
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(Icons.settings,
-                                                    color: colours.white),
-                                                Text(
-                                                  'Settings',
-                                                  style: TextStyle(
-                                                      color: colours.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        value: 'data',
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Settings(),
-                                              ));
-                                        },
-                                      ),
+                                      //   PopupMenuItem(
+                                      //     child: Row(
+                                      //       children: [
+                                      //         Row(
+                                      //           children: [
+                                      //             Icon(Icons.settings,
+                                      //                 color: colours.white),
+                                      //             Text(
+                                      //               'Settings',
+                                      //               style: TextStyle(
+                                      //                   color: colours.white),
+                                      //             ),
+                                      //           ],
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //     value: 'data',
+                                      //     onTap: () {
+                                      //       Navigator.push(
+                                      //           context,
+                                      //           MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 Settings(),
+                                      //           ));
+                                      //     },
+                                      //   ),
                                     ],
                                   );
                                   print('click popup menu');
@@ -212,13 +200,13 @@ Widget HrHomepage(context) {
                           SizedBox(
                             height: HelperWh.H(context) * .120,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('History'),
-                              Text('See all'),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     Text('History'),
+                          //     Text('See all'),
+                          //   ],
+                          // ),
                           SizedBox(
                             height: HelperWh.H(context) * .030,
                           ),
@@ -257,35 +245,79 @@ Widget HrHomepage(context) {
                                                   .doc(user)
                                                   .snapshots();
 
-                                              return Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        list[index].name,
-                                                        style: TextStyle(
-                                                          fontSize: HelperWh.W(
-                                                                  context) *
-                                                              .050,
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SingleuserDetail(
+                                                          userModel:
+                                                              list[index],
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        '\u{20B9} ${list[index].salery}',
-                                                        style: TextStyle(
-                                                          color: colours.amber,
-                                                          fontSize: HelperWh.W(
-                                                                  context) *
-                                                              .050,
+                                                      ));
+                                                },
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              list[index].name,
+                                                              style: TextStyle(
+                                                                fontSize:
+                                                                    HelperWh.W(
+                                                                            context) *
+                                                                        .050,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              '\u{20B9} ${list[index].salery}',
+                                                              style: TextStyle(
+                                                                color: colours
+                                                                    .amber,
+                                                                fontSize:
+                                                                    HelperWh.W(
+                                                                            context) *
+                                                                        .050,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                        Row(
+                                                          children: [
+                                                            StreamBuilder(
+                                                              stream: snapshot,
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .connectionState ==
+                                                                    ConnectionState
+                                                                        .waiting) {
+                                                                  return CircularProgressIndicator();
+                                                                }
+                                                                final data =
+                                                                    snapshot
+                                                                        .data;
+                                                                return Text(data![
+                                                                    'usertype']);
+                                                              },
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               );
                                             },
                                             separatorBuilder: (context, index) {
@@ -308,45 +340,53 @@ Widget HrHomepage(context) {
             ],
           ),
           Positioned(
-            top: HelperWh.H(context) * .250,
-            left: HelperWh.W(context) * .11,
-            child: Container(
-                width: HelperWh.W(context) * .8,
-                // height: 110,
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(HelperWh.W(context) * .030),
-                  color: Colors.black,
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: HelperWh.H(context) * .030,
-                    ),
-                    Textwidget(
-                      text: 'Salery Expense',
-                      style: TextStyle(
-                        color: colours.white,
-                        fontSize: HelperWh.W(context) * .050,
+              top: HelperWh.H(context) * .250,
+              left: HelperWh.W(context) * .11,
+              child: Container(
+                  width: HelperWh.W(context) * .8,
+                  // height: 110,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(HelperWh.W(context) * .030),
+                    color: Colors.black,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
                       ),
-                    ),
-                    SizedBox(
-                      height: HelperWh.H(context) * .030,
-                    ),
-                    Textwidget(
-                      text: '\u{20B9} 5,12,548.00',
-                      style: TextStyle(
-                        color: colours.white,
-                        fontSize: HelperWh.W(context) * .070,
-                        fontWeight: FontWeight.bold,
+                      Textwidget(
+                        text: 'Salery Expense',
+                        style: TextStyle(
+                          color: colours.white,
+                          fontSize: HelperWh.W(context) * .050,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: HelperWh.H(context) * .050,
-                    ),
-                  ],
-                )),
-          ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .030,
+                      ),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, instance, child) {
+                          return FutureBuilder(
+                            future: instance.fetchSalerytottal(),
+                            builder: (context, snapshot) {
+                              return Textwidget(
+                                text: '\u{20B9}${instance.totalSalary} ',
+                                style: TextStyle(
+                                  color: colours.white,
+                                  fontSize: HelperWh.W(context) * .070,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .050,
+                      ),
+                    ],
+                  ))),
         ],
       ),
     ),

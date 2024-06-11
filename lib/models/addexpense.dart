@@ -9,6 +9,7 @@ class AddExpenseModel {
   String? Image;
   String note;
   String uid;
+  String date;
 
   AddExpenseModel({
     this.id,
@@ -21,6 +22,7 @@ class AddExpenseModel {
     this.Image,
     required this.note,
     required this.uid,
+    required this.date,
   });
   Map<String, dynamic> toJson(uiddoc) => {
         'id': uiddoc,
@@ -33,6 +35,7 @@ class AddExpenseModel {
         'note': note,
         'uid': uid,
         'amout': Amount,
+        'date':date,
       };
 
   factory AddExpenseModel.fromJsone(Map<String, dynamic> json) {
@@ -47,6 +50,7 @@ class AddExpenseModel {
       Image: json['image'],
       note: json['note'],
       uid: json['uid'],
+      date: json['date'],
     );
   }
 }

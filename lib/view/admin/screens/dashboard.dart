@@ -1,7 +1,11 @@
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Widget dashbord(BuildContext context) {
   return Padding(
@@ -125,46 +129,110 @@ Widget dashbord(BuildContext context) {
                     )
                   ],
                 ),
-                ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: HelperWh.W(context) * .050,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [ 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'arjun',
-                                  style: TextStyle(
-                                    color: colours.white,
-                                    fontSize: HelperWh.W(context) * .010,
-                                  ),
+                Consumer<Firebasecontroller>(
+                  builder: (context, instance, child) {
+                    return StreamBuilder(
+                      stream: instance.getSalery(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        List<Addsalerymodel> list = [];
+
+                        list = snapshot.data!.docs.map((e) {
+                          return Addsalerymodel.fromjsone(
+                              e.data() as Map<String, dynamic>);
+                        }).toList();
+                        return list.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'no salery',
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                                Text(
-                                  '\u{20B9} 8500.00',
-                                  style: TextStyle(
-                                    color: colours.amber,
-                                    fontSize: HelperWh.W(context) * .010,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: HelperWh.H(context) * .020,
-                      );
-                    },
-                    itemCount: 25)
+                              )
+                            : ListView.separated(
+                                itemCount: list.length,
+                                physics: BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  var user = list[index].userid;
+
+                                  final snapshot = db
+                                      .collection('users')
+                                      .doc(user)
+                                      .snapshots();
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: HelperWh.W(context) * .050,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              list[index].name,
+                                              style: TextStyle(
+                                                color: colours.white,
+                                                fontSize:
+                                                    HelperWh.W(context) * .010,
+                                              ),
+                                            ),
+                                            Text(
+                                              '\u{20B9} ${list[index].salery}',
+                                              style: TextStyle(
+                                                color: colours.amber,
+                                                fontSize:
+                                                    HelperWh.W(context) * .010,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        StreamBuilder(
+                                          stream: snapshot,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  snapshot.data!['usertype'],
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                Text(''),
+                                              ],
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: HelperWh.H(context) * .020,
+                                  );
+                                },
+                              );
+                      },
+                    );
+                  },
+                )
               ],
             ),
           ),

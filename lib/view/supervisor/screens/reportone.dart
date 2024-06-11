@@ -4,6 +4,7 @@ import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/elevatedbt.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 
 class ReportoneCategory extends StatelessWidget {
   AddExpenseModel addExpenseModel;
@@ -124,6 +125,10 @@ class ReportoneCategory extends StatelessWidget {
                   height: HelperWh.H(context) * .040,
                 ),
                 ElevatedBT(
+                  ontap: () async {
+                    // await OpenFile.open("application/vnd.ms-excel");
+                    await openExcelFile();
+                  },
                   text: 'Generate',
                   width: HelperWh.W(context) * .60,
                 )
@@ -133,5 +138,10 @@ class ReportoneCategory extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> openExcelFile() async {
+    final filePath = 'path/to/your/excel/file.xlsx';
+    await OpenFile.open(filePath);
   }
 }

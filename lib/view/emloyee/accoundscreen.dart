@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:expancetracker/auth/loggin.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/utils/strings.dart';
+import 'package:expancetracker/view/emloyee/screens/AdminNoti.dart';
 import 'package:expancetracker/view/emloyee/screens/accound_information.dart';
 import 'package:expancetracker/view/emloyee/screens/feedback.dart';
 import 'package:expancetracker/view/emloyee/widget/appbar.dart';
@@ -88,7 +91,7 @@ class AccoundScreen extends StatelessWidget {
                 // padding: EdgeInsets.all(10),
                 // height: HelperWh.H(context) * .080,
 
-                child: Text('data')),
+                child: Text('Logout event')),
             actions: <Widget>[
               Row(
                 children: [
@@ -98,13 +101,14 @@ class AccoundScreen extends StatelessWidget {
                         width: HelperWh.W(context) * .30,
                         text: 'Yes',
                         ontap: () async {
-                          await instance
-                              .logout(context)
-                              .then((value) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LogginPage(),
-                                  )));
+                          await instance.logout(context).then((value) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LogginPage(),
+                                ),
+                                (route) => false);
+                          });
                         },
                       );
                     },
@@ -127,6 +131,7 @@ class AccoundScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final helper = Provider.of<Firebasecontroller>(context);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -154,70 +159,116 @@ class AccoundScreen extends StatelessWidget {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.person,
-                  size: HelperWh.W(context) * .090,
-                ),
-              )
+                  padding: const EdgeInsets.all(15.0),
+                  child: Consumer<Firebasecontroller>(
+                    builder: (context, helper, child) {
+                      return StreamBuilder(
+                        stream: helper.getAdminNotification(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          final data = snapshot.data!.docs.length;
+                          return Badge(
+                            label: Text(data.toString()),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AdminNotificationScreen(),
+                                    ));
+                              },
+                              icon: Icon(
+                                Icons.notification_important,
+                                size: HelperWh.W(context) * .090,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ))
             ],
           ),
-          SizedBox(
-            width: double.infinity,
-            height: HelperWh.H(context) * .200,
-            child: Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: HelperWh.W(context) * .060),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: HelperWh.H(context) * .030,
-                      ),
-                      CircleAvatar(
-                        backgroundColor: colours.amber,
-                        radius: HelperWh.W(context) * .120,
-                        backgroundImage:
-                            AssetImage('asset/image/Memoji Boys 4-15.png'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: HelperWh.W(context) * .030),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Textwidget(
-                                text: 'User Name',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              height: HelperWh.H(context) * .010,
-                            ),
-                            Text('+9475837583'),
-                          ],
+          Consumer<Firebasecontroller>(
+            builder: (context, instance, child) {
+              return FutureBuilder(
+                future: instance.getuser(auth.currentUser!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  final data = instance.singleuser;
+                  return SizedBox(
+                    width: double.infinity,
+                    height: HelperWh.H(context) * .200,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: HelperWh.W(context) * .060),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: HelperWh.H(context) * .030,
+                              ),
+                              CircleAvatar(
+                                backgroundColor: colours.amber,
+                                radius: HelperWh.W(context) * .120,
+                                backgroundImage: NetworkImage(
+                                  instance.url.toString(),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: HelperWh.W(context) * .030),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Textwidget(
+                                        text: 'data!.name',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(
+                                      height: HelperWh.H(context) * .010,
+                                    ),
+                                    Text('+9475837583'),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: HelperWh.W(context) * .050,
-                  left: HelperWh.W(context) * .230,
-                  child: Container(
-                    width: HelperWh.W(context) * .060,
-                    height: HelperWh.H(context) * .050,
-                    decoration: BoxDecoration(
-                      color: colours.grey,
-                      shape: BoxShape.circle,
+                        Positioned(
+                          top: HelperWh.W(context) * .050,
+                          left: HelperWh.W(context) * .230,
+                          child: Container(
+                            width: HelperWh.W(context) * .060,
+                            height: HelperWh.H(context) * .050,
+                            decoration: BoxDecoration(
+                              color: colours.grey,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                helper.pickimage(auth.currentUser!.uid);
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                size: HelperWh.W(context) * .050,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                    child: Icon(
-                      Icons.edit,
-                      size: HelperWh.W(context) * .050,
-                    ),
-                  ),
-                )
-              ],
-            ),
+                  );
+                },
+              );
+            },
           ),
           Divider(),
           SizedBox(

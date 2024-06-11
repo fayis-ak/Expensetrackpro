@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
-import 'package:expancetracker/services/usercontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/controller/usercontroller.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';
@@ -29,9 +29,9 @@ class _ExpenseState extends State<Expense> {
     final instance = Provider.of<Firebasecontroller>(context);
     return Scaffold(
         body: FutureBuilder(
-      future: instance.getExpense(),
+      future: instance.getexpenseadmin(),
       builder: (context, snapshot) {
-        final exp = instance.expence;
+        final exp = instance.expenceadmin;
         return Column(
           children: [
             Container(
@@ -56,19 +56,19 @@ class _ExpenseState extends State<Expense> {
                           columnSpacing: HelperWh.W(context) * .150,
                           columns: [
                             DataColumn(
-                              label: Text('image'),
+                              label: Text('no'),
                             ),
                             DataColumn(
                               label: Text('name'),
                             ),
                             DataColumn(
-                              label: Text('Date'),
+                              label: Text('Amount'),
                             ),
                             DataColumn(
-                              label: Text('id'),
+                              label: Text('site'),
                             ),
                             DataColumn(
-                              label: Text('Salery'),
+                              label: Text('category'),
                             ),
                           ],
                           rows: instance.expence.map((user) {
@@ -76,8 +76,8 @@ class _ExpenseState extends State<Expense> {
                               DataCell(Text('${index + 1}')),
                               DataCell(Text(user.name)),
                               DataCell(Text(user.Amount)),
+                              DataCell(Text(user.site)),
                               DataCell(Text(user.category)),
-                              DataCell(Text('100')),
                             ]);
                           }).toList()),
                     ),

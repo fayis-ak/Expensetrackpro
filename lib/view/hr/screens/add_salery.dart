@@ -3,10 +3,12 @@ import 'dart:ui';
 
 import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/models/feedback.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/models/notification.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/hr/Bottomnavigation/bottomnav.dart';
 import 'package:expancetracker/view/hr/homescreen.dart';
 import 'package:expancetracker/widgets/appBar.dart';
@@ -357,18 +359,30 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                                             .toString(),
                                         incetive: incetive.text,
                                         note: noteController.text,
+                                        data: date,
                                       ),
                                     )
-                                        .then((value) {
-                                      SuccsToast(context, 'ADD salery succes');
-                                      Navigator.pushReplacement(
+                                        .then(
+                                      (value) {
+                                        SuccsToast(
+                                            context, 'ADD salery succes');
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => HrBottomnav(
                                               indexnum: 0,
                                             ),
-                                          ));
-                                    });
+                                          ),
+                                        );
+                                        helper.addNotification(
+                                          NotificationModel(
+                                            uid: auth.currentUser!.uid,
+                                            msg: 'Your Salery added',
+                                          ),
+                                          userid.text,
+                                        );
+                                      },
+                                    );
                                   }
                                 },
                                 child: Text('Add',

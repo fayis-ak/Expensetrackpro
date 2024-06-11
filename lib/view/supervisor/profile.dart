@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:expancetracker/auth/loggin.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/strings.dart';
 
 import 'package:expancetracker/view/supervisor/screens/accoundinformation.dart';
@@ -91,7 +92,7 @@ class ProfileSiteSuper extends StatelessWidget {
                 // padding: EdgeInsets.all(10),
                 // height: HelperWh.H(context) * .080,
 
-                child: Text('data')),
+                child: Text('Logout event')),
             actions: <Widget>[
               Row(
                 children: [
@@ -101,13 +102,14 @@ class ProfileSiteSuper extends StatelessWidget {
                         width: HelperWh.W(context) * .30,
                         text: 'Yes',
                         ontap: () async {
-                          await instance
-                              .logout(context)
-                              .then((value) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LogginPage(),
-                                  )));
+                          await instance.logout(context).then((value) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LogginPage(),
+                                ),
+                                (route) => false);
+                          });
                         },
                       );
                     },
@@ -130,6 +132,7 @@ class ProfileSiteSuper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final instance = Provider.of<Firebasecontroller>(context);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -156,13 +159,13 @@ class ProfileSiteSuper extends StatelessWidget {
               ),
             ),
             actions: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.person,
-                  size: HelperWh.W(context) * .090,
-                ),
-              )
+              // Padding(
+              //   padding: const EdgeInsets.all(15.0),
+              //   child: Icon(
+              //     Icons.person,
+              //     size: HelperWh.W(context) * .090,
+              //   ),
+              // )
             ],
           ),
           SizedBox(
@@ -181,8 +184,9 @@ class ProfileSiteSuper extends StatelessWidget {
                       CircleAvatar(
                         backgroundColor: colours.amber,
                         radius: HelperWh.W(context) * .120,
-                        backgroundImage:
-                            AssetImage('asset/image/Memoji Boys 4-15.png'),
+                        backgroundImage: NetworkImage(
+                          instance.url.toString(),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -213,9 +217,14 @@ class ProfileSiteSuper extends StatelessWidget {
                       color: colours.grey,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      Icons.edit,
-                      size: HelperWh.W(context) * .050,
+                    child: IconButton(
+                      onPressed: () {
+                        instance.pickimage(auth.currentUser!.uid);
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        size: HelperWh.W(context) * .050,
+                      ),
                     ),
                   ),
                 )

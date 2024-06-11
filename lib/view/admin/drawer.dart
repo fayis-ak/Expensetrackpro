@@ -1,4 +1,4 @@
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
@@ -81,7 +81,7 @@ class _NavigationTabState extends State<NavigationTab> {
                       builder: (context) => Expense(),
                     ))),
             buildListTileTitle(
-                "employee",
+                "Users",
                 3,
                 Icons.person,
                 () => Navigator.push(
@@ -107,15 +107,15 @@ class _NavigationTabState extends State<NavigationTab> {
                     MaterialPageRoute(
                       builder: (context) => sitesupervisor(),
                     ))),
-            buildListTileTitle(
-                "sitereport",
-                5,
-                Icons.question_mark,
-                () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => sitesupervisor(),
-                    ))),
+            // buildListTileTitle(
+            //     "sitereport",
+            //     5,
+            //     Icons.question_mark,
+            //     () => Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => sitere(),
+            //         ))),
             buildListTileTitle(
                 "notofication",
                 6,
@@ -179,7 +179,7 @@ class _NavigationTabState extends State<NavigationTab> {
         style: TextStyle(
             fontWeight:
                 _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 12),
       ),
       onTap: ontapo,

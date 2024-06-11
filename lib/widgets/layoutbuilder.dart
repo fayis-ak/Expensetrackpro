@@ -17,8 +17,9 @@ class LayoutBuilderCheck extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600) {
-          return AdminHomeScreen();
-          //  LogginAdmin();
+          return
+              //  AdminHomeScreen();
+              LogginAdmin();
         } else {
           //site supervisor
           return

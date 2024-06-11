@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:expancetracker/models/addexpense.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/widgets/appBar.dart';
 import 'package:expancetracker/widgets/containerbutton.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
@@ -22,12 +23,6 @@ class _EditExpenseState extends State<EditExpense> {
   final formKey = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
-
-  TextEditingController amountController = TextEditingController();
-
-  TextEditingController noteController = TextEditingController();
-
-  TextEditingController timeController = TextEditingController();
 
   List site = [
     ' Mubai',
@@ -338,6 +333,15 @@ class _EditExpenseState extends State<EditExpense> {
   @override
   Widget build(BuildContext context) {
     nameController = TextEditingController(text: widget.addExpenseModel.name);
+
+    TextEditingController amountController =
+        TextEditingController(text: widget.addExpenseModel.Amount);
+
+    TextEditingController noteController =
+        TextEditingController(text: widget.addExpenseModel.note);
+
+    TextEditingController timeController =
+        TextEditingController(text: widget.addExpenseModel.date);
     return Scaffold(
       appBar: Appbarwidget(
         leading: GestureDetector(
@@ -471,13 +475,15 @@ class _EditExpenseState extends State<EditExpense> {
                   Text('Image'),
                   Container(
                     width: double.infinity,
-                    height: HelperWh.H(context) * .080,
-                    color: colours.grey,
+                    height: HelperWh.H(context) * .30,
                     padding: EdgeInsets.symmetric(
                         horizontal: HelperWh.W(context) * .020),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [],
+                    decoration: BoxDecoration(
+                      color: colours.grey,
+                      image: DecorationImage(
+                          image: NetworkImage(
+                        widget.addExpenseModel.Image.toString(),
+                      )),
                     ),
                   ),
                   SizedBox(
@@ -498,8 +504,17 @@ class _EditExpenseState extends State<EditExpense> {
                       Container(
                         width: HelperWh.W(context) * .60,
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Add',
+                          onPressed: () {
+                            db
+                                .collection('Expense')
+                                .doc(widget.addExpenseModel.id)
+                                .update({
+                              'Name': nameController.text,
+                              'amout': amountController.text,
+                              'note': noteController.text,
+                            });
+                          },
+                          child: Text('Edit',
                               style: TextStyle(color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: colours.black,

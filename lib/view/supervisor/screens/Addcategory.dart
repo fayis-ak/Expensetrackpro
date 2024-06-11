@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:expancetracker/models/addcategory.dart';
+import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/utils/strings.dart';
@@ -11,7 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/firebasecontroller.dart';
+import '../../../controller/firebasecontroller.dart';
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key});
@@ -62,6 +65,76 @@ class _AddCategoryState extends State<AddCategory> {
                               userid: auth.currentUser!.uid,
                             ),
                           );
+                          Navigator.pop(context);
+                          SuccsToast(context, 'Add category');
+                          instance.addcategoryc.clear();
+                          setState(() {});
+                        },
+                        width: 100,
+                        height: 50,
+                        fontsize: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future editcategory(CategoryMd categoryMd) async {
+    final editcategory = TextEditingController(text: categoryMd.category);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Consumer<Firebasecontroller>(
+          builder: (context, instance, _) {
+            return AlertDialog(
+              title: const Text('Add Category'),
+              content: Container(
+                height: HelperWh.H(context) * .20,
+                child: Form(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: HelperWh.H(context) * .010,
+                      ),
+                      textformwidget(
+                        controller: editcategory,
+                        hint: 'Category name',
+                        validation: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'requred filed';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .010,
+                      ),
+                      SizedBox(
+                        height: HelperWh.H(context) * .010,
+                      ),
+                      Containerwidget(
+                        text: 'edit update',
+                        ontap: () async {
+                          log(categoryMd.id.toString());
+                          db.collection('Category').doc(categoryMd.id).update({
+                            'Category': editcategory.text,
+                          });
+                          Navigator.pop(context);
+                          setState(() {});
                         },
                         width: 100,
                         height: 50,
@@ -136,9 +209,11 @@ class _AddCategoryState extends State<AddCategory> {
                             : ListView.separated(
                                 itemCount: single.length,
                                 shrinkWrap: true,
+                                physics: BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    // height: HelperWh.H(context) * .050,
+                                    alignment: Alignment.center,
+                                    height: HelperWh.H(context) * .080,
                                     decoration: BoxDecoration(
                                       color: colours.grey,
                                     ),
@@ -150,9 +225,24 @@ class _AddCategoryState extends State<AddCategory> {
                                                 text: single[index].category,
                                                 style: TextStyle()),
                                             Spacer(),
+                                            Spacer(),
                                             IconButton(
-                                                onPressed: () {},
-                                                icon: Icon(Icons.edit))
+                                              onPressed: () async {
+                                                await editcategory(
+                                                    single[index]);
+                                              },
+                                              icon: Icon(Icons.edit),
+                                            ),
+                                            IconButton(
+                                              onPressed: () async {
+                                                db
+                                                    .collection('Category')
+                                                    .doc(single[index].id)
+                                                    .delete();
+                                                setState(() {});
+                                              },
+                                              icon: Icon(Icons.delete),
+                                            ),
                                           ],
                                         ),
                                       ],

@@ -1,5 +1,5 @@
 import 'package:expancetracker/models/addexpense.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';
 import 'package:expancetracker/view/supervisor/screens/addexpence.dart';
 import 'package:expancetracker/view/supervisor/screens/reportone.dart';
@@ -16,7 +16,7 @@ class ReportSuppervisor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> coutry = ['Mumbai', 'Kollam', 'Delhi', 'Hariyana', 'Kashmir'];
-
+    final helper = Provider.of<Firebasecontroller>(context, listen: false);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -58,62 +58,57 @@ class ReportSuppervisor extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                       horizontal: HelperWh.W(context) * .030,
                     ),
-                    child: Consumer<Firebasecontroller>(
-                      builder: (context, helper, child) {
-                        return StreamBuilder(
-                          stream: helper.getExpensejeberate(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            List<AddExpenseModel> list = [];
+                    child: StreamBuilder(
+                      stream: helper.getExpensejeberate(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        List<AddExpenseModel> list = [];
 
-                            list = snapshot.data!.docs.map((e) {
-                              return AddExpenseModel.fromJsone(
-                                  e.data() as Map<String, dynamic>);
-                            }).toList();
+                        list = snapshot.data!.docs.map((e) {
+                          return AddExpenseModel.fromJsone(
+                              e.data() as Map<String, dynamic>);
+                        }).toList();
 
-                            if (snapshot.hasData) {
-                              return list.isEmpty
-                                  ? Center(
+                        if (snapshot.hasData) {
+                          return list.isEmpty
+                              ? Center(
+                                  child: Textwidget(
+                                      text: 'no dta', style: TextStyle()),
+                                )
+                              : ListView.separated(
+                                  itemCount: list.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReportoneCategory(
+                                                addExpenseModel: list[index],
+                                              ),
+                                            ));
+                                      },
                                       child: Textwidget(
-                                          text: 'no dta', style: TextStyle()),
-                                    )
-                                  : ListView.separated(
-                                      itemCount: list.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReportoneCategory(
-                                                    addExpenseModel:
-                                                        list[index],
-                                                  ),
-                                                ));
-                                          },
-                                          child: Textwidget(
-                                            text: list[index].name,
-                                            style: TextStyle(),
-                                          ),
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return SizedBox(
-                                          height: HelperWh.H(context) * .030,
-                                        );
-                                      },
+                                        text: list[index].name,
+                                        style: TextStyle(),
+                                      ),
                                     );
-                            }
-                            return Container();
-                          },
-                        );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(
+                                      height: HelperWh.H(context) * .030,
+                                    );
+                                  },
+                                );
+                        }
+                        return Container();
                       },
                     ))
               ],

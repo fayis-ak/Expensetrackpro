@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:expancetracker/models/usermodel.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/utils/strings.dart';
@@ -21,6 +21,7 @@ class AccoundInformationSitesuper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final instance = Provider.of<Firebasecontroller>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF808080),
@@ -70,8 +71,8 @@ class AccoundInformationSitesuper extends StatelessWidget {
                               CircleAvatar(
                                 backgroundColor: colours.amber,
                                 radius: HelperWh.W(context) * .120,
-                                backgroundImage: AssetImage(
-                                    'asset/image/Memoji Boys 4-15.png'),
+                                backgroundImage:
+                                    NetworkImage(helper.userModel!.image),
                               ),
                             ],
                           ),
@@ -86,9 +87,14 @@ class AccoundInformationSitesuper extends StatelessWidget {
                               color: colours.grey,
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              Icons.edit,
-                              size: HelperWh.W(context) * .050,
+                            child: IconButton(
+                              onPressed: () {
+                                instance.pickimage(auth.currentUser!.uid);
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                size: HelperWh.W(context) * .050,
+                              ),
                             ),
                           ),
                         )
@@ -170,8 +176,9 @@ class AccoundInformationSitesuper extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedBT(
+                              ontap: () {},
                               width: HelperWh.W(context) * .60,
-                              text: 'Save',
+                              text: 'Edit',
                             )
                           ],
                         ),

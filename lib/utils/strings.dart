@@ -7,6 +7,7 @@ import 'package:expancetracker/view/hr/Bottomnavigation/bottomnav.dart';
 import 'package:expancetracker/view/supervisor/bottomnavwidget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 const admin = '9abyerdrMcgjwDGKaKFnKQTmv2k1';
 
@@ -48,3 +49,7 @@ void navigationusertype(String usertype, BuildContext context) {
       break;
   }
 }
+
+
+String time = DateFormat('h:mm a').format(DateTime.now());
+String date = DateFormat("dd/m/yyyy").format(DateTime.now());

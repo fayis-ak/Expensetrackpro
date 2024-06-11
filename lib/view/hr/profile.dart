@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:expancetracker/auth/loggin.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/view/emloyee/screens/feedback.dart';
 import 'package:expancetracker/view/hr/screens/accoundinformation.dart';
 import 'package:expancetracker/view/hr/screens/feedback.dart';
@@ -100,11 +100,12 @@ class profilepageHr extends StatelessWidget {
                         ontap: () async {
                           await instance
                               .logout(context)
-                              .then((value) => Navigator.push(
+                              .then((value) => Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => LogginPage(),
-                                  )));
+                                  ),
+                                  (route) => false));
                         },
                       );
                     },
@@ -153,13 +154,13 @@ class profilepageHr extends StatelessWidget {
               ),
             ),
             actions: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.person,
-                  size: HelperWh.W(context) * .090,
-                ),
-              )
+              // Padding(
+              //   padding: const EdgeInsets.all(15.0),
+              //   child: Icon(
+              //     Icons.person,
+              //     size: HelperWh.W(context) * .090,
+              //   ),
+              // )
             ],
           ),
           SizedBox(

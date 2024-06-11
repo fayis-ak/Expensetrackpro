@@ -8,6 +8,7 @@ class Textformfieldwidget extends StatelessWidget {
   final int? maxlines;
   final sufixicone;
   final String? hint;
+  
 
   const Textformfieldwidget({
     super.key,
@@ -16,11 +17,13 @@ class Textformfieldwidget extends StatelessWidget {
     this.maxlines,
     this.sufixicone,
     this.hint,
+    
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+       
       maxLines: maxlines,
       controller: controller,
       decoration: InputDecoration(

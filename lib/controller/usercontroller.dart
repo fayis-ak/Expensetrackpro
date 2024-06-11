@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expancetracker/models/usermodel.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/supervisor/bottomnavwidget.dart';
@@ -83,6 +83,7 @@ class Authcontroller with ChangeNotifier {
               email: email,
               phone: phone,
               uid: creadential.user!.uid,
+              image: '',
             ));
       }).then((value) => {
                 SuccsToast(context, 'Succes login'),

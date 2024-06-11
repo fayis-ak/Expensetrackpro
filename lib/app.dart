@@ -1,7 +1,8 @@
-import 'package:expancetracker/services/controller.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
-import 'package:expancetracker/services/usercontroller.dart';
+import 'package:expancetracker/controller/controller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/controller/usercontroller.dart';
 import 'package:expancetracker/view/admin/adminHome.dart';
+import 'package:expancetracker/view/admin/screens/notification.dart';
 import 'package:expancetracker/view/emloyee/homescreen.dart';
 
 import 'package:expancetracker/widgets/layoutbuilder.dart';
@@ -27,8 +28,10 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: LayoutBuilderCheck()
-          // home: Employees(),
+          home: 
+          // Notificationadmn()
+           LayoutBuilderCheck()
+
           ),
     );
   }

@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/models/usermodel.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/emloyee/widget/appbar.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class EmployeeHomepage extends StatefulWidget {
@@ -19,46 +22,42 @@ class EmployeeHomepage extends StatefulWidget {
 }
 
 class _EmployeeHomepageState extends State<EmployeeHomepage> {
-  late Future<Addsalerymodel?> d;
-  @override
-  void initState() {
-    super.initState();
-    d = Provider.of<Firebasecontroller>(context, listen: false)
-        .salerGet(auth.currentUser!.uid);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<Firebasecontroller>(context, listen: false);
+    final curentuser = auth.currentUser;
+
     return Column(
       children: [
         UserAppbar(),
-        FutureBuilder<Addsalerymodel?>(
-          future: d,
+        FutureBuilder(
+          future: provider.getSalerysingle(curentuser!.uid),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
-
             if (snapshot.hasError) {
               return Center(
-                child: Text('Error: ${snapshot.error}'),
+                child: Text('No Salery add wait'),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data == null) {
+              return Center(
+                child: Text('No data available'),
               );
             }
 
             // log(snapshot.data.toString());
-            // log(auth.currentUser!.uid);
 
-            String nameText = 'No Name';
-            String salaryText = 'No Salary';
+            // final salery = snapshot.data;
 
-            final user = snapshot.data!;
-            if (user != null) {
-              nameText = user.name ?? 'noname';
-              salaryText = user.salery ?? 'nos';
-            }
-            if (snapshot.hasData && snapshot.data != null) {
+            final Addsalerymodel addsalerymodel =
+                snapshot.data as Addsalerymodel;
+            log(snapshot.data.toString());
+            if (snapshot.hasData) {
               return Column(
                 children: [
                   Padding(
@@ -77,15 +76,33 @@ class _EmployeeHomepageState extends State<EmployeeHomepage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Textwidget(
-                              text: nameText,
-                              style: TextStyle(
-                                color: colours.white,
-                                fontSize: HelperWh.W(context) * .050,
-                              ),
-                            ),
-                          ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  addsalerymodel.name.isEmpty
+                                      ? Text('procecing')
+                                      : Textwidget(
+                                          text: addsalerymodel.name,
+                                          style: TextStyle(
+                                            color: colours.white,
+                                            fontSize:
+                                                HelperWh.W(context) * .050,
+                                          ),
+                                        ),
+                                  addsalerymodel.data.isEmpty
+                                      ? Text('proce')
+                                      : Textwidget(
+                                          text: addsalerymodel.data,
+                                          style: TextStyle(
+                                            color: colours.white,
+                                            fontSize:
+                                                HelperWh.W(context) * .050,
+                                          ),
+                                        )
+                                ],
+                              )),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -99,13 +116,17 @@ class _EmployeeHomepageState extends State<EmployeeHomepage> {
                                       fontSize: HelperWh.W(context) * .050,
                                     ),
                                   ),
-                                  Textwidget(
-                                    text: '\u{20B9} ${salaryText}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: colours.white,
-                                        fontSize: HelperWh.W(context) * .080),
-                                  ),
+                                  addsalerymodel.salery.isEmpty
+                                      ? Text('proce')
+                                      : Textwidget(
+                                          text:
+                                              '\u{20B9} ${addsalerymodel.salery}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: colours.white,
+                                              fontSize:
+                                                  HelperWh.W(context) * .080),
+                                        ),
 
                                   //
 
@@ -121,13 +142,17 @@ class _EmployeeHomepageState extends State<EmployeeHomepage> {
                                       fontSize: HelperWh.W(context) * .050,
                                     ),
                                   ),
-                                  Textwidget(
-                                    text: '\u{20B9}  ${user.incetive ?? 'no'}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: colours.white,
-                                        fontSize: HelperWh.W(context) * .080),
-                                  ),
+                                  addsalerymodel.incetive.isEmpty
+                                      ? Text('proce')
+                                      : Textwidget(
+                                          text:
+                                              '\u{20B9}   ${addsalerymodel.incetive}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: colours.white,
+                                              fontSize:
+                                                  HelperWh.W(context) * .080),
+                                        ),
                                   SizedBox(
                                     height: HelperWh.H(context) * .050,
                                   ),
@@ -142,9 +167,7 @@ class _EmployeeHomepageState extends State<EmployeeHomepage> {
                 ],
               );
             }
-            return Center(
-              child: Text('Your salery proceing'),
-            );
+            return Container();
           },
         )
       ],

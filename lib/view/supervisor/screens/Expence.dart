@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:expancetracker/models/addexpense.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';
 import 'package:expancetracker/view/supervisor/screens/editexpense.dart';
 import 'package:expancetracker/view/supervisor/screens/report.dart';
@@ -83,7 +84,7 @@ class Expence extends StatelessWidget {
                                                 HelperWh.W(context) * .040,
                                           )),
                                       Textwidget(
-                                          text: list[index].datatime,
+                                          text: list[index].date,
                                           style: TextStyle(
                                             fontSize:
                                                 HelperWh.W(context) * .040,
@@ -91,7 +92,7 @@ class Expence extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                title: Text(list[index].Amount),
+                                title: Text('AMOUND : ${list[index].Amount}'),
                                 trailing: PopupMenuButton(
                                   icon: Icon(Icons.settings),
                                   itemBuilder: (context) => [
@@ -111,7 +112,12 @@ class Expence extends StatelessWidget {
                                     PopupMenuItem(
                                       value: 'Option 3',
                                       child: Icon(Icons.delete),
-                                      onTap: () {},
+                                      onTap: () async {
+                                        await db
+                                            .collection('Expense')
+                                            .doc(list[index].id)
+                                            .delete();
+                                      },
                                     ),
                                     PopupMenuItem(
                                       value: 'Option 3',

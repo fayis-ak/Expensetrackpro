@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:expancetracker/services/firebasecontroller.dart';
-import 'package:expancetracker/services/usercontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/controller/usercontroller.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';

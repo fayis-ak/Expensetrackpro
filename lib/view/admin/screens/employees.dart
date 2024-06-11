@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:expancetracker/services/firebasecontroller.dart';
-import 'package:expancetracker/services/usercontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/controller/usercontroller.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/view/admin/auth/logginadmin.dart';
@@ -64,6 +64,7 @@ class _EmployeesState extends State<Employees> {
                         height: HelperWh.H(context) * .010,
                       ),
                       textformwidget(
+                        maxlenght: 10,
                         controller: instance.phonenumber,
                         hint: 'phone number',
                         validation: (value) {
@@ -113,7 +114,7 @@ class _EmployeesState extends State<Employees> {
                         height: HelperWh.H(context) * .010,
                       ),
                       Containerwidget(
-                        text: 'Add employe',
+                        text: 'Add User',
                         ontap: () async {
                           if (instance.formkey.currentState!.validate()) {
                             await instance.Signup(
@@ -196,7 +197,7 @@ class _EmployeesState extends State<Employees> {
                       child: Row(
                         children: [
                           Textwidget(
-                            text: 'Add Employe',
+                            text: 'Add Users',
                             style: TextStyle(color: colours.white),
                           ),
                           SizedBox(

@@ -17,14 +17,16 @@ class UserAppbar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: HelperWh.H(context) * .200,
       flexibleSpace: Container(
         height: HelperWh.H(context) * .200,
+        width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
               // begin: Alignment.topLeft,
               // end: Alignment.center,
               colors: <Color>[
-                Color(0xFFFFFFFF),
-                Color(0xFF000000),
-                Color(0xFF8F2A1),
+                Color(0xFF808080),
+                Color(0xFF808080),
+                Color(0xFF808080),
+                Color(0xFF808080)
               ]),
         ),
         child: Padding(

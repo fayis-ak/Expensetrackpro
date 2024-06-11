@@ -4,8 +4,8 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expancetracker/models/addexpense.dart';
-import 'package:expancetracker/services/firebasecontroller.dart';
-import 'package:expancetracker/services/usercontroller.dart';
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/controller/usercontroller.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
@@ -581,6 +581,7 @@ class _AddexpenceState extends State<Addexpence> {
                                     Image: imghelper.urllink,
                                     note: noteController.text,
                                     uid: auth.currentUser!.uid,
+                                    date: date,
                                   ),
                                 )
                                     .then((value) {
