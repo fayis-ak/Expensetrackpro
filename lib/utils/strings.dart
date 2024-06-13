@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-const admin = '9abyerdrMcgjwDGKaKFnKQTmv2k1';
+const admin = '63kJVSD88kbXjc894Cxw62AUaBY2';
 
 final db = FirebaseFirestore.instance;
 

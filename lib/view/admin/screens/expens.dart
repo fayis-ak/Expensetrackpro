@@ -10,6 +10,7 @@ import 'package:expancetracker/widgets/containerbutton.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -70,6 +71,9 @@ class _ExpenseState extends State<Expense> {
                             DataColumn(
                               label: Text('category'),
                             ),
+                            DataColumn(
+                              label: Text('image'),
+                            ),
                           ],
                           rows: instance.expence.map((user) {
                             return DataRow(cells: <DataCell>[
@@ -78,6 +82,7 @@ class _ExpenseState extends State<Expense> {
                               DataCell(Text(user.Amount)),
                               DataCell(Text(user.site)),
                               DataCell(Text(user.category)),
+                              DataCell(Image.network(user.Image.toString())),
                             ]);
                           }).toList()),
                     ),
