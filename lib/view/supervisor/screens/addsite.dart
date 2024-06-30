@@ -162,6 +162,7 @@ class _AddSiteState extends State<AddSite> {
 
   @override
   Widget build(BuildContext context) {
+    final helper = Provider.of<Firebasecontroller>(context);
     return Scaffold(
       appBar: Appbarwidget(
         leading: GestureDetector(
@@ -219,15 +220,7 @@ class _AddSiteState extends State<AddSite> {
                           height: HelperWh.H(context) * .020,
                         ),
                         sites.isEmpty
-                            ? Column(
-                                children: [
-                                  Center(
-                                    child: Textwidget(
-                                        text: 'No sites available',
-                                        style: TextStyle()),
-                                  ),
-                                ],
-                              )
+                            ? Text('NO SITE ')
                             : ListView.separated(
                                 itemCount: sites.length,
                                 shrinkWrap: true,
@@ -243,7 +236,7 @@ class _AddSiteState extends State<AddSite> {
                                         Row(
                                           children: [
                                             Textwidget(
-                                                text: single[index].Sitename,
+                                                text: sites[index].Sitename,
                                                 style: TextStyle()),
                                             Spacer(),
                                             IconButton(
@@ -256,7 +249,7 @@ class _AddSiteState extends State<AddSite> {
                                               onPressed: () async {
                                                 db
                                                     .collection('site')
-                                                    .doc(single[index].id)
+                                                    .doc(sites[index].id)
                                                     .delete();
                                               },
                                               icon: Icon(Icons.delete),

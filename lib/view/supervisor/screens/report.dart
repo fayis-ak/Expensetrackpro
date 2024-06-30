@@ -1,3 +1,5 @@
+import 'package:expancetracker/models/addexpense.dart';
+import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
 import 'package:expancetracker/widgets/appBar.dart';
@@ -7,7 +9,8 @@ import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 
 class JenerateReport extends StatelessWidget {
-  const JenerateReport({super.key});
+  AddExpenseModel addExpenseModel;
+  JenerateReport({super.key, required this.addExpenseModel});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class JenerateReport extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Name', style: TextStyle()),
+                    Textwidget(text: addExpenseModel.name, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -55,7 +58,7 @@ class JenerateReport extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Mumbai', style: TextStyle()),
+                    Textwidget(text: addExpenseModel.site, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -69,7 +72,8 @@ class JenerateReport extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Material Purchase', style: TextStyle()),
+                    Textwidget(
+                        text: addExpenseModel.category, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -83,7 +87,8 @@ class JenerateReport extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: '12:35 PM', style: TextStyle()),
+                    Textwidget(
+                        text: addExpenseModel.datatime, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -97,7 +102,8 @@ class JenerateReport extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Cash', style: TextStyle()),
+                    Textwidget(
+                        text: addExpenseModel.paymentmode, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
@@ -111,13 +117,16 @@ class JenerateReport extends StatelessWidget {
                           color: Colors.grey,
                         )),
                     Spacer(),
-                    Textwidget(text: 'Mumbai Site Expense', style: TextStyle()),
+                    Textwidget(text: addExpenseModel.note, style: TextStyle()),
                   ],
                 ),
                 SizedBox(
-                  height: HelperWh.H(context) * .040,
+                  height: HelperWh.H(context) * .080,
                 ),
                 ElevatedBT(
+                  ontap: () {
+                    SuccsToast(context, 'THe JENERATING EXCEl SUCCES');
+                  },
                   text: 'Generate',
                   width: HelperWh.W(context) * .60,
                 )

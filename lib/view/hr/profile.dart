@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:expancetracker/auth/loggin.dart';
 import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/view/emloyee/screens/feedback.dart';
 import 'package:expancetracker/view/hr/screens/accoundinformation.dart';
 import 'package:expancetracker/view/hr/screens/feedback.dart';
@@ -163,62 +164,78 @@ class profilepageHr extends StatelessWidget {
               // )
             ],
           ),
-          SizedBox(
-            width: double.infinity,
-            height: HelperWh.H(context) * .200,
-            child: Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: HelperWh.W(context) * .060),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: HelperWh.H(context) * .030,
-                      ),
-                      CircleAvatar(
-                        backgroundColor: colours.amber,
-                        radius: HelperWh.W(context) * .120,
-                        backgroundImage:
-                            AssetImage('asset/image/Memoji Boys 4-15.png'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: HelperWh.W(context) * .030),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Textwidget(
-                                text: 'User Name',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              height: HelperWh.H(context) * .010,
-                            ),
-                            Text('+9475837583'),
-                          ],
+          Consumer<Firebasecontroller>(
+            builder: (context, helper, child) {
+              return FutureBuilder(
+                future: helper.getuser(auth.currentUser!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return SizedBox(
+                    width: double.infinity,
+                    height: HelperWh.H(context) * .200,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: HelperWh.W(context) * .060),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: HelperWh.H(context) * .030,
+                              ),
+                              CircleAvatar(
+                                backgroundColor: colours.amber,
+                                radius: HelperWh.W(context) * .120,
+                                backgroundImage:
+                                    NetworkImage(helper.userModel!.image),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: HelperWh.W(context) * .030),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Textwidget(
+                                        text: helper.userModel!.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    SizedBox(
+                                      height: HelperWh.H(context) * .010,
+                                    ),
+                                    Text(helper.userModel!.phone),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: HelperWh.W(context) * .050,
-                  left: HelperWh.W(context) * .230,
-                  child: Container(
-                    width: HelperWh.W(context) * .060,
-                    height: HelperWh.H(context) * .050,
-                    decoration: BoxDecoration(
-                      color: colours.grey,
-                      shape: BoxShape.circle,
+                        Positioned(
+                          top: HelperWh.W(context) * .050,
+                          left: HelperWh.W(context) * .230,
+                          child: Container(
+                            width: HelperWh.W(context) * .060,
+                            height: HelperWh.H(context) * .050,
+                            decoration: BoxDecoration(
+                              color: colours.grey,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              size: HelperWh.W(context) * .050,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                    child: Icon(
-                      Icons.edit,
-                      size: HelperWh.W(context) * .050,
-                    ),
-                  ),
-                )
-              ],
-            ),
+                  );
+                },
+              );
+            },
           ),
           Divider(),
           SizedBox(

@@ -18,6 +18,7 @@ import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Addexpence extends StatefulWidget {
@@ -333,6 +334,8 @@ class _AddexpenceState extends State<Addexpence> {
   String? selectedsite;
   String? selectedcategory;
 
+  DateTime? date;
+
   String? selectedpayment;
 
   Future<void> timePicker(BuildContext context) async {
@@ -346,6 +349,13 @@ class _AddexpenceState extends State<Addexpence> {
         _selectedTime = pickedTime;
       });
     }
+  }
+
+  String formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final format = DateFormat('hh:mm a'); // Use the format you want
+    return format.format(dt);
   }
 
   @override
@@ -475,10 +485,10 @@ class _AddexpenceState extends State<Addexpence> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('14/2/2024'),
+                              Text('Select Time'),
                               if (_selectedTime != null)
                                 Text(
-                                  _selectedTime!.format(context).toString(),
+                                  formatTimeOfDay(_selectedTime!),
                                 ),
                             ],
                           ),
@@ -516,6 +526,7 @@ class _AddexpenceState extends State<Addexpence> {
                       ),
                       Text('Amount'),
                       Textformfieldwidget(
+                        inputType: TextInputType.number,
                         controller: amountController,
                         validation: (value) {},
                       ),
@@ -569,31 +580,45 @@ class _AddexpenceState extends State<Addexpence> {
                               onPressed: () {
                                 log(imghelper.urllink.toString());
 
-                                addexinstance
-                                    .addExpense(
-                                  AddExpenseModel(
-                                    name: nameController.text,
-                                    site: selectedsite.toString(),
-                                    category: selectedcategory.toString(),
-                                    datatime: _selectedTime.toString(),
-                                    paymentmode: selectedpayment.toString(),
-                                    Amount: amountController.text,
-                                    Image: imghelper.urllink,
-                                    note: noteController.text,
-                                    uid: auth.currentUser!.uid,
-                                    date: date,
-                                  ),
-                                )
-                                    .then((value) {
-                                  SuccsToast(context, 'add expense sucess');
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => BottomnavWidget(
-                                          indexnum: 0,
-                                        ),
-                                      ));
-                                });
+                                final timeformat = _selectedTime != null
+                                    ? formatTimeOfDay(_selectedTime!)
+                                    : '';
+
+                                if (imghelper.urllink != null) {
+                                  addexinstance
+                                      .addExpense(
+                                    AddExpenseModel(
+                                      name: nameController.text,
+                                      site: selectedsite.toString(),
+                                      category: selectedcategory.toString(),
+                                      datatime: timeformat,
+                                      paymentmode: selectedpayment.toString(),
+                                      Amount: amountController.text,
+                                      Image: imghelper.urllink,
+                                      note: noteController.text,
+                                      uid: auth.currentUser!.uid,
+                                      date: DateTime.now().toString(),
+                                    ),
+                                  )
+                                      .then((value) {
+                                    SuccsToast(context, 'add expense sucess');
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => BottomnavWidget(
+                                            indexnum: 0,
+                                          ),
+                                        ));
+
+                                    imghelper.urllink = null;
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text('Please Add Image')));
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('ok')));
                               },
                               child: Text('Add',
                                   style: TextStyle(color: Colors.white)),

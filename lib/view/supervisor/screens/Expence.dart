@@ -128,7 +128,9 @@ class Expence extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  JenerateReport(),
+                                                  JenerateReport(
+                                                addExpenseModel: list[index],
+                                              ),
                                             ));
                                       },
                                     ),

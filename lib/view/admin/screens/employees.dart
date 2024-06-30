@@ -245,7 +245,9 @@ class _EmployeesState extends State<Employees> {
                           ],
                           rows: instance.usermodel.map((user) {
                             return DataRow(cells: <DataCell>[
-                              DataCell(CircleAvatar()),
+                              DataCell(CircleAvatar(
+                                backgroundImage: NetworkImage(user.image),
+                              )),
                               DataCell(Text(user.name)),
                               DataCell(Text(user.type)),
                               DataCell(Text(user.email)),

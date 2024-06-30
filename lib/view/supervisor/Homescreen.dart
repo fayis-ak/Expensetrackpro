@@ -381,14 +381,33 @@ Widget SupervisorHomeScreen(context) {
                 subtitle: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '\u{20B9} 45000',
-                      style: TextStyle(
-                        color: colours.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: HelperWh.W(context) * .050,
-                      ),
-                    ),
+                    Consumer<Firebasecontroller>(
+                      builder: (context, helper, child) {
+                        return FutureBuilder(
+                          future: helper.fetchExpense(),
+                          builder: (context, snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return CircularProgressIndicator();
+                              default:
+                                if (snapshot.hasError) {
+                                  return Text(
+                                      'Error fetching total Expense: ${snapshot.error}');
+                                } else {
+                                  final totalSalary = snapshot.data ?? 0.0;
+                                  return Text(
+                                    'Total Expence: \$' +
+                                        totalSalary.toStringAsFixed(
+                                          2,
+                                        ),
+                                    style: TextStyle(color: Colors.white),
+                                  );
+                                }
+                            }
+                          },
+                        );
+                      },
+                    )
                   ],
                 ),
                 backgroundColor: colours.grey,
@@ -397,41 +416,68 @@ Widget SupervisorHomeScreen(context) {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Daily Expence'),
-                      Text(
-                        '\u{20B9} 2,548.00',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: HelperWh.W(context) * .050,
-                        ),
-                      ),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, helper, child) {
+                          return FutureBuilder(
+                            future: helper.fetchExpenses(),
+                            builder: (context, snapshot) {
+                              return Text(
+                                ' Daily \u{20B9}  ${helper.getDailyExpenses(DateTime.now())}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: HelperWh.W(context) * .050,
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      )
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Monthly Expence'),
-                      Text(
-                        '\u{20B9} 2,548.00',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: HelperWh.W(context) * .050,
-                        ),
-                      ),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, helper, child) {
+                          return FutureBuilder(
+                            future: helper.fetchExpenses(),
+                            builder: (context, snapshot) {
+                              return Text(
+                                ' Monthly \u{20B9}  ${helper.getMonthlyExpenses(DateTime.now())}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: HelperWh.W(context) * .050,
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      )
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Annal Expence:'),
-                      Text(
-                        '\u{20B9} 2,548.00',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: HelperWh.W(context) * .050,
-                        ),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, helper, child) {
+                          return FutureBuilder(
+                            future: helper.fetchExpenses(),
+                            builder: (context, snapshot) {
+                              return Text(
+                                ' Yearly \u{20B9}  ${helper.getYearlyExpenses(DateTime.now())}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: HelperWh.W(context) * .050,
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),

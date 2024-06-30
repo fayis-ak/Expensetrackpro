@@ -31,7 +31,7 @@ class _EmployeeHomepageState extends State<EmployeeHomepage> {
       children: [
         UserAppbar(),
         FutureBuilder(
-          future: provider.getSalerysingle(curentuser!.uid),
+          future: provider.getSalerysingle(auth.currentUser!.email),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(

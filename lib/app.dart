@@ -2,6 +2,7 @@ import 'package:expancetracker/controller/controller.dart';
 import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/controller/usercontroller.dart';
 import 'package:expancetracker/view/admin/adminHome.dart';
+import 'package:expancetracker/view/admin/screens/feedback.dart';
 import 'package:expancetracker/view/admin/screens/notification.dart';
 import 'package:expancetracker/view/emloyee/homescreen.dart';
 
@@ -28,11 +29,11 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: 
-          // Notificationadmn()
-           LayoutBuilderCheck()
+          home:
 
-          ),
+              // Feedbackdr()
+
+              LayoutBuilderCheck()),
     );
   }
 }

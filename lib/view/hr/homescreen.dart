@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/utils/strings.dart';
@@ -221,12 +223,22 @@ Widget HrHomepage(context) {
                                       child: CircularProgressIndicator(),
                                     );
                                   }
+
                                   List<Addsalerymodel> list = [];
 
                                   list = snapshot.data!.docs.map((e) {
                                     return Addsalerymodel.fromjsone(
                                         e.data() as Map<String, dynamic>);
                                   }).toList();
+
+                                  // List<Addsalerymodel> salery = [];
+
+                                  // List<Addsalerymodel> filteredList = list
+                                  //     .where(
+                                  //         (element) => element.salery != null)
+                                  //     .toList();
+
+                                  // log('THe lenght ${filteredList.last.toString()}');
 
                                   if (snapshot.hasData) {
                                     return list.isEmpty
@@ -272,7 +284,8 @@ Widget HrHomepage(context) {
                                                                   .spaceBetween,
                                                           children: [
                                                             Text(
-                                                              list[index].name,
+                                                              list[index]
+                                                                  .userid,
                                                               style: TextStyle(
                                                                 fontSize:
                                                                     HelperWh.W(
@@ -293,27 +306,27 @@ Widget HrHomepage(context) {
                                                             ),
                                                           ],
                                                         ),
-                                                        Row(
-                                                          children: [
-                                                            StreamBuilder(
-                                                              stream: snapshot,
-                                                              builder: (context,
-                                                                  snapshot) {
-                                                                if (snapshot
-                                                                        .connectionState ==
-                                                                    ConnectionState
-                                                                        .waiting) {
-                                                                  return CircularProgressIndicator();
-                                                                }
-                                                                final data =
-                                                                    snapshot
-                                                                        .data;
-                                                                return Text(data![
-                                                                    'usertype']);
-                                                              },
-                                                            ),
-                                                          ],
-                                                        )
+                                                        // Row(
+                                                        //   children: [
+                                                        //     StreamBuilder(
+                                                        //       stream: snapshot,
+                                                        //       builder: (context,
+                                                        //           snapshot) {
+                                                        //         if (snapshot
+                                                        //                 .connectionState ==
+                                                        //             ConnectionState
+                                                        //                 .waiting) {
+                                                        //           return CircularProgressIndicator();
+                                                        //         }
+                                                        //         final data =
+                                                        //             snapshot
+                                                        //                 .data;
+                                                        //         return Text(data![
+                                                        //             'usertype']);
+                                                        //       },
+                                                        //     ),
+                                                        //   ],
+                                                        // )
                                                       ],
                                                     ),
                                                   ],
@@ -367,17 +380,27 @@ Widget HrHomepage(context) {
                       ),
                       Consumer<Firebasecontroller>(
                         builder: (context, instance, child) {
-                          return FutureBuilder(
-                            future: instance.fetchSalerytottal(),
+                          return FutureBuilder<double>(
+                            future: instance.fetchTotalSalary(),
                             builder: (context, snapshot) {
-                              return Textwidget(
-                                text: '\u{20B9}${instance.totalSalary} ',
-                                style: TextStyle(
-                                  color: colours.white,
-                                  fontSize: HelperWh.W(context) * .070,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return CircularProgressIndicator();
+                                default:
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                        'Error fetching total salary: ${snapshot.error}');
+                                  } else {
+                                    final totalSalary = snapshot.data ?? 0.0;
+                                    return Text(
+                                      'Total Salary: \$' +
+                                          totalSalary.toStringAsFixed(
+                                            2,
+                                          ),
+                                      style: TextStyle(color: Colors.white),
+                                    );
+                                  }
+                              }
                             },
                           );
                         },

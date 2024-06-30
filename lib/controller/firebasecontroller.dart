@@ -90,6 +90,148 @@ class Firebasecontroller with ChangeNotifier {
 
   // --------------------get =================================
 
+  // salery cound
+
+  double _totalSalary = 0.0;
+
+  double get totalSalary => _totalSalary;
+
+  saleryprovider() {
+    fetchSalerytottal();
+  }
+
+  Future<void> fetchSalerytottal() async {
+    try {
+      QuerySnapshot snapshot = await db.collection('Addsalery').get();
+      double totl = 0.0;
+      snapshot.docs.forEach((doc) {
+        if (doc['salery'] is double) {
+          totl += doc['salery'];
+        } else if (doc['salery'] is num) {
+          totl += doc['salery']
+              .toDouble(); // Convert other numeric types (like int)
+        }
+      });
+      _totalSalary = totl;
+      // notifyListeners();
+    } catch (e) {}
+  }
+
+  Future<double> fetchTotalSalary() async {
+    try {
+      QuerySnapshot snapshot = await db.collection('Addsalery').get();
+
+      double totalSalary = 0.0;
+
+      snapshot.docs.forEach((doc) {
+        final salaryString = doc['salery'];
+        final salary = double.tryParse(salaryString);
+        if (salary != null) {
+          totalSalary += salary;
+        } else {}
+      });
+
+      return totalSalary;
+    } catch (e) {
+      return 0.0;
+    }
+  }
+
+  // day montly yearly
+
+  Future<List<AddExpenseModel>> getExpensecount() async {
+    final snapshot = await db.collection('Expense').get();
+
+    return snapshot.docs
+        .map((e) => AddExpenseModel.fromJsone(e.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  // daily
+  double calculateDailyExpenses(List<AddExpenseModel> expenses, DateTime date) {
+    return expenses
+        .where((expense) => issamdat(expense.date, date))
+        .fold(0.0, (sum, expense) => sum + double.parse(expense.Amount));
+  }
+
+  List<AddExpenseModel> _expenses = [];
+
+  List<AddExpenseModel> get expenses => _expenses;
+
+  Future fetchExpenses() async {
+    _expenses = await getExpensecount();
+    notifyListeners();
+  }
+
+  double getDailyExpenses(DateTime date) {
+    return calculateDailyExpenses(_expenses, date);
+  }
+
+  // same day chekc
+  bool issamdat(String datastring, DateTime date) {
+    DateTime expenseDate = DateTime.parse(datastring);
+    return expenseDate.year == date.year &&
+        expenseDate.month == date.month &&
+        expenseDate.day == date.day;
+  }
+
+  ///montly
+  double calculateMonthlyExpenses(
+      List<AddExpenseModel> expenses, DateTime date) {
+    return expenses
+        .where((expense) => isSameMonth(expense.date, date))
+        .fold(0.0, (sum, expense) => sum + double.parse(expense.Amount));
+  }
+
+  bool isSameMonth(String dateString, DateTime date) {
+    DateTime expenseDate = DateTime.parse(dateString);
+    return expenseDate.year == date.year && expenseDate.month == date.month;
+  }
+
+  double getMonthlyExpenses(DateTime date) {
+    return calculateMonthlyExpenses(_expenses, date);
+  }
+
+  // yearly
+
+  double calculateYearlyExpenses(
+      List<AddExpenseModel> expenses, DateTime date) {
+    return expenses
+        .where((expense) => isSameYear(expense.date, date))
+        .fold(0.0, (sum, expense) => sum + double.parse(expense.Amount));
+  }
+
+  bool isSameYear(String dateString, DateTime date) {
+    DateTime expenseDate = DateTime.parse(dateString);
+    return expenseDate.year == date.year;
+  }
+
+  double getYearlyExpenses(DateTime date) {
+    return calculateYearlyExpenses(_expenses, date);
+  }
+  /////////////////////
+
+  Future<double> fetchExpense() async {
+    try {
+      QuerySnapshot snapshot = await db.collection('Expense').get();
+
+      double tottalexpense = 0.00;
+
+      snapshot.docs.forEach((doc) {
+        final expense = doc['amout'];
+        final exp = double.parse(expense);
+        if (exp != null) {
+          tottalexpense += exp;
+        } else {}
+      });
+      return tottalexpense;
+    } catch (e) {
+      return 0.00;
+    }
+  }
+
+  /////////////////////////////
+
   Stream<QuerySnapshot> getAdminNotification() {
     return db.collection('AdminPushNotification').snapshots();
   }
@@ -228,6 +370,15 @@ class Firebasecontroller with ChangeNotifier {
     notifyListeners();
   }
 
+  Future updateSitesuperProfile(uid, name, image, phonenumber) async {
+    db.collection('users').doc(uid).update({
+      'name': name,
+      'image': image,
+      'phonenumber': phonenumber,
+    });
+    notifyListeners();
+  }
+
   // get expense
 
   Stream<QuerySnapshot> getExpensejeberate() {
@@ -250,6 +401,22 @@ class Firebasecontroller with ChangeNotifier {
 
     addsalerymodel = Addsalerymodel.fromjsone(doc.data());
     return addsalerymodel;
+  }
+
+  Stream<QuerySnapshot> getUser() {
+    return db
+        .collection('users')
+        .where('usertype', isEqualTo: 'Employee')
+        // .where(field)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getHr() {
+    return db
+        .collection('users')
+        .where('usertype', isEqualTo: 'sitesupervisor')
+        // .where(field)
+        .snapshots();
   }
 
   Future addFeedback(FeedBackModel feedbackmodel) async {
@@ -336,6 +503,7 @@ class Firebasecontroller with ChangeNotifier {
     db.collection('users').doc(uid).update({
       'image': url,
     });
+    notifyListeners();
   }
 
   // search ============================================
@@ -352,23 +520,4 @@ class Firebasecontroller with ChangeNotifier {
   }
 
   // salery addition
-  int _totalSalary = 0;
-
-  int get totalSalary => _totalSalary;
-
-  Future fetchSalerytottal() async {
-    int temp = 0;
-    QuerySnapshot querySnapshot = await db.collection('Addsalery').get();
-
-    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      int salery = doc['salery'];
-
-      log(salery.toString());
-
-      temp += salery;
-    }
-    _totalSalary = temp;
-
-    notifyListeners();
-  }
 }

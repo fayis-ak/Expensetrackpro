@@ -15,7 +15,6 @@ class ReportSuppervisor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> coutry = ['Mumbai', 'Kollam', 'Delhi', 'Hariyana', 'Kashmir'];
     final helper = Provider.of<Firebasecontroller>(context, listen: false);
     return SingleChildScrollView(
       child: Column(
@@ -38,19 +37,19 @@ class ReportSuppervisor extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextFormField(
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.search),
-                    fillColor: colours.grey,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        HelperWh.W(context) * .010,
-                      ),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //     suffixIcon: Icon(Icons.search),
+                //     fillColor: colours.grey,
+                //     filled: true,
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(
+                //         HelperWh.W(context) * .010,
+                //       ),
+                //       borderSide: BorderSide.none,
+                //     ),
+                //   ),
+                // ),
                 SizedBox(
                   height: HelperWh.H(context) * .030,
                 ),
@@ -83,6 +82,7 @@ class ReportSuppervisor extends StatelessWidget {
                               : ListView.separated(
                                   itemCount: list.length,
                                   shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return GestureDetector(
                                       onTap: () {

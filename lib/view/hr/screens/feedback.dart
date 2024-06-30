@@ -1,16 +1,21 @@
+import 'package:expancetracker/controller/firebasecontroller.dart';
+import 'package:expancetracker/models/feedback.dart';
+import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
+import 'package:expancetracker/utils/strings.dart';
 import 'package:expancetracker/widgets/elevatedbt.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
+import 'package:provider/provider.dart';
 
 class HrFeedbackScreen extends StatelessWidget {
   HrFeedbackScreen({super.key});
 
   final nameController = TextEditingController();
-  final emailController = TextEditingController();
+  final emailController = TextEditingController(text: auth.currentUser!.email);
   final feedbackController = TextEditingController();
 
   @override
@@ -54,7 +59,12 @@ class HrFeedbackScreen extends StatelessWidget {
                   ),
                   Textformfieldwidget(
                     controller: nameController,
-                    validation: (value) {},
+                    validation: (value) {
+                      if (value!.isEmpty) {
+                        return 'required';
+                      }
+                      return null;
+                    },
                   ),
 
                   //
@@ -63,7 +73,7 @@ class HrFeedbackScreen extends StatelessWidget {
                     height: HelperWh.H(context) * .030,
                   ),
                   Textwidget(
-                    text: 'Name',
+                    text: 'Email',
                     style: TextStyle(
                       color: colours.greydark,
                       fontSize: HelperWh.W(context) * .050,
@@ -73,8 +83,14 @@ class HrFeedbackScreen extends StatelessWidget {
                     height: HelperWh.H(context) * .030,
                   ),
                   Textformfieldwidget(
+                    readonly: true,
                     controller: emailController,
-                    validation: (value) {},
+                    validation: (value) {
+                      if (value!.isEmpty) {
+                        return 'required';
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(
                     height: HelperWh.H(context) * .030,
@@ -87,13 +103,17 @@ class HrFeedbackScreen extends StatelessWidget {
                     ),
                   ),
 
-                  EmojiFeedback(
-                    animDuration: const Duration(milliseconds: 300),
-                    curve: Curves.bounceIn,
-                    inactiveElementScale: .5,
-                    showLabel: false,
-                    onChanged: (value) {
-                      print(value);
+                  Consumer<Firebasecontroller>(
+                    builder: (context, helper, child) {
+                      return EmojiFeedback(
+                        animDuration: const Duration(milliseconds: 300),
+                        curve: Curves.bounceIn,
+                        inactiveElementScale: .5,
+                        showLabel: false,
+                        onChanged: (value) {
+                          helper.newEmoji(value);
+                        },
+                      );
                     },
                   ),
                   SizedBox(
@@ -120,7 +140,12 @@ class HrFeedbackScreen extends StatelessWidget {
                       controller: feedbackController,
                       hint: 'Suggest anything we can improve',
                       maxlines: 3,
-                      validation: (value) {},
+                      validation: (value) {
+                        if (value!.isEmpty) {
+                          return 'required';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   SizedBox(
@@ -130,10 +155,30 @@ class HrFeedbackScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedBT(
-                        text: 'Send Feedback',
-                        width: HelperWh.W(context) * .60,
-                      ),
+                      Consumer<Firebasecontroller>(
+                        builder: (context, helper, child) {
+                          return ElevatedBT(
+                            ontap: () {
+                              helper
+                                  .addFeedback(
+                                FeedBackModel(
+                                  name: nameController.text,
+                                  email: emailController.text,
+                                  exeperinece: helper.newemoji!.toInt(),
+                                  suggest: feedbackController.text,
+                                  uid: auth.currentUser!.uid,
+                                ),
+                              )
+                                  .then((value) {
+                                SuccsToast(context, 'Feedback Send Succes');
+                                clear();
+                              });
+                            },
+                            text: 'Send Feedback',
+                            width: HelperWh.W(context) * .60,
+                          );
+                        },
+                      )
                     ],
                   ),
                   SizedBox(
@@ -146,5 +191,11 @@ class HrFeedbackScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  clear() {
+    nameController.clear();
+    emailController.clear();
+    feedbackController.clear();
   }
 }

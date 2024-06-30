@@ -71,8 +71,11 @@ class AccoundInformationSitesuper extends StatelessWidget {
                               CircleAvatar(
                                 backgroundColor: colours.amber,
                                 radius: HelperWh.W(context) * .120,
-                                backgroundImage:
-                                    NetworkImage(helper.userModel!.image),
+                                backgroundImage: NetworkImage(
+                                  helper.userModel!.image.isEmpty
+                                      ? 'helper.url.toString()'
+                                      : helper.userModel!.image,
+                                ),
                               ),
                             ],
                           ),
@@ -162,6 +165,7 @@ class AccoundInformationSitesuper extends StatelessWidget {
                           height: HelperWh.H(context) * .030,
                         ),
                         Textformfieldwidget(
+                          maxlenght: 10,
                           controller: PhoneNumberController,
                           sufixicone: Icon(
                             Icons.edit,
@@ -176,7 +180,14 @@ class AccoundInformationSitesuper extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedBT(
-                              ontap: () {},
+                              ontap: () {
+                                helper.updateSitesuperProfile(
+                                  auth.currentUser!.uid,
+                                  editNameController.text,
+                                  'image',
+                                  PhoneNumberController.text,
+                                );
+                              },
                               width: HelperWh.W(context) * .60,
                               text: 'Edit',
                             )

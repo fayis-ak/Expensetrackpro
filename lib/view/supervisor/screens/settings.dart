@@ -37,7 +37,7 @@ class SettingsScreensitesup extends StatelessWidget {
                         width: HelperWh.W(context) * .30,
                         text: 'Yes',
                         ontap: () async {
-                          instance.deleteallexpense();
+                          await instance.deleteallexpense();
                         },
                       );
                     },

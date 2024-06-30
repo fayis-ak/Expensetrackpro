@@ -21,7 +21,7 @@ class HrAccoundInformation extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF808080),
-        title: Text('Accound information'),
+        title: Text('Accound information HR'),
       ),
       // appBar: ,
       body: SingleChildScrollView(
@@ -66,8 +66,11 @@ class HrAccoundInformation extends StatelessWidget {
                                 CircleAvatar(
                                   backgroundColor: colours.amber,
                                   radius: HelperWh.W(context) * .120,
-                                  backgroundImage:
-                                      NetworkImage(instance.userModel!.image),
+                                  backgroundImage: NetworkImage(
+                                    instance.userModel!.image.isEmpty
+                                        ? 'instance.url.toString()'
+                                        : instance.userModel!.image,
+                                  ),
                                 ),
                               ],
                             ),
@@ -82,9 +85,14 @@ class HrAccoundInformation extends StatelessWidget {
                                 color: colours.grey,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
-                                Icons.edit,
-                                size: HelperWh.W(context) * .050,
+                              child: IconButton(
+                                onPressed: () {
+                                  instance.pickimage(auth.currentUser!.uid);
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: HelperWh.W(context) * .050,
+                                ),
                               ),
                             ),
                           )

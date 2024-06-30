@@ -137,7 +137,7 @@ class _LogginAdminState extends State<LogginAdmin> {
                                           borderRadius: BorderRadius.circular(
                                             HelperWh.W(context) * .010,
                                           ),
-                                          borderSide: BorderSide.none,
+                                          // borderSide: BorderSide.none,
                                         ),
                                       ),
                                       validator: (value) {
@@ -155,14 +155,14 @@ class _LogginAdminState extends State<LogginAdmin> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: Textwidget(
-                                        text: 'Forgot Password?',
-                                        style:
-                                            TextStyle(color: colours.greydark),
-                                      ),
-                                    ),
+                                    // TextButton(
+                                    //   onPressed: () {},
+                                    //   child: Textwidget(
+                                    //     text: 'Forgot Password?',
+                                    //     style:
+                                    //         TextStyle(color: colours.greydark),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                                 Containerwidget(
@@ -217,21 +217,22 @@ class textformwidget extends StatelessWidget {
   final TextEditingController? controller;
   final int? maxlenght;
 
-  const textformwidget(
-      {super.key,
-      this.sufix,
-      required this.validation,
-      this.hint,
-      this.controller,
-      this.maxlenght,
-      });
+  const textformwidget({
+    super.key,
+    this.sufix,
+    required this.validation,
+    this.hint,
+    this.controller,
+    this.maxlenght,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-       inputFormatters: [
-        LengthLimitingTextInputFormatter(maxlenght)
-       ],
+      autofillHints: [
+        "admin@gmail.com",
+      ],
+      inputFormatters: [LengthLimitingTextInputFormatter(maxlenght)],
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,
@@ -241,7 +242,7 @@ class textformwidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(
             HelperWh.W(context) * .010,
           ),
-          borderSide: BorderSide.none,
+          // borderSide: BorderSide.none,
         ),
       ),
       validator: validation,

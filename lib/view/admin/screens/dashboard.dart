@@ -37,13 +37,19 @@ Widget dashbord(BuildContext context) {
                       fontSize: HelperWh.W(context) * .020,
                     ),
                   ),
-                  Textwidget(
-                    text: '4,156',
-                    style: TextStyle(
-                      color: colours.white,
-                      fontSize: HelperWh.W(context) * .020,
-                    ),
-                  ),
+                  Consumer<Firebasecontroller>(
+                    builder: (context, helper, child) {
+                      return FutureBuilder(
+                        future: helper.fetchExpenses(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            'Daily \u{20B9} = ${helper.getDailyExpenses(DateTime.now())}',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        },
+                      );
+                    },
+                  )
                 ],
               ),
             ),
@@ -66,13 +72,19 @@ Widget dashbord(BuildContext context) {
                       fontSize: HelperWh.W(context) * .020,
                     ),
                   ),
-                  Textwidget(
-                    text: '4,156',
-                    style: TextStyle(
-                      color: colours.white,
-                      fontSize: HelperWh.W(context) * .020,
-                    ),
-                  ),
+                  Consumer<Firebasecontroller>(
+                    builder: (context, helper, child) {
+                      return FutureBuilder(
+                        future: helper.fetchExpenses(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            'Montly \u{20B9} = ${helper.getMonthlyExpenses(DateTime.now())}',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        },
+                      );
+                    },
+                  )
                 ],
               ),
             ),
@@ -95,13 +107,19 @@ Widget dashbord(BuildContext context) {
                       fontSize: HelperWh.W(context) * .020,
                     ),
                   ),
-                  Textwidget(
-                    text: '4,156',
-                    style: TextStyle(
-                      color: colours.white,
-                      fontSize: HelperWh.W(context) * .020,
-                    ),
-                  ),
+                  Consumer<Firebasecontroller>(
+                    builder: (context, helper, child) {
+                      return FutureBuilder(
+                        future: helper.fetchExpenses(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            'Yearly \u{20B9} = ${helper.getYearlyExpenses(DateTime.now())}',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        },
+                      );
+                    },
+                  )
                 ],
               ),
             ),
@@ -209,11 +227,11 @@ Widget dashbord(BuildContext context) {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  snapshot.data!['usertype'],
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
+                                                // Text(
+                                                //   snapshot.data!['usertype'],
+                                                //   style: TextStyle(
+                                                //       color: Colors.white),
+                                                // ),
                                                 Text(''),
                                               ],
                                             );

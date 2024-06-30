@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expancetracker/models/addSalery.dart';
 import 'package:expancetracker/models/feedback.dart';
 import 'package:expancetracker/controller/firebasecontroller.dart';
 import 'package:expancetracker/models/notification.dart';
+import 'package:expancetracker/models/usermodel.dart';
 import 'package:expancetracker/utils/cherry_toast.dart';
 import 'package:expancetracker/utils/color.dart';
 import 'package:expancetracker/utils/size.dart';
@@ -16,6 +18,7 @@ import 'package:expancetracker/widgets/containerbutton.dart';
 import 'package:expancetracker/widgets/textformwidget.dart';
 import 'package:expancetracker/widgets/textwidget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -39,15 +42,6 @@ class _HrAddSaleryState extends State<HrAddSalery> {
   TextEditingController timeController = TextEditingController();
   TextEditingController userid = TextEditingController();
   TextEditingController incetive = TextEditingController();
-
-  List<String> site = [
-    ' Mubai',
-    'Delhi',
-    'Hariyana',
-    'Kashmir',
-    'Kollam',
-    'kannur',
-  ];
 
   List<String> payment = [
     ' cash',
@@ -121,38 +115,38 @@ class _HrAddSaleryState extends State<HrAddSalery> {
     );
   }
 
-  Widget buildView(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: HelperWh.H(context) * .300,
-      child: ListView.separated(
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          return Container(
-            height: HelperWh.H(context) * .060,
-            color: Color(0xFFEFF0F5),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: HelperWh.W(context) * .030,
-                ),
-                Text(
-                  site[index],
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return SizedBox(
-            height: 20,
-          );
-        },
-        itemCount: site.length,
-      ),
-    );
-  }
+  // Widget buildView(BuildContext context) {
+  //   return Container(
+  //     width: double.infinity,
+  //     height: HelperWh.H(context) * .300,
+  //     child: ListView.separated(
+  //       physics: BouncingScrollPhysics(),
+  //       itemBuilder: (context, index) {
+  //         return Container(
+  //           height: HelperWh.H(context) * .060,
+  //           color: Color(0xFFEFF0F5),
+  //           child: Row(
+  //             children: [
+  //               SizedBox(
+  //                 width: HelperWh.W(context) * .030,
+  //               ),
+  //               Text(
+  //                 site[index],
+  //                 style: TextStyle(color: Colors.black),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       },
+  //       separatorBuilder: (context, index) {
+  //         return SizedBox(
+  //           height: 20,
+  //         );
+  //       },
+  //       itemCount: site.length,
+  //     ),
+  //   );
+  // }
 
   Widget cashbuildview(BuildContext context) {
     return Container(
@@ -202,8 +196,11 @@ class _HrAddSaleryState extends State<HrAddSalery> {
     }
   }
 
+  String? _selectedUser;
+
   @override
   Widget build(BuildContext context) {
+    final helper = Provider.of<Firebasecontroller>(context, listen: false);
     return Scaffold(
       appBar: Appbarwidget(
         leading: GestureDetector(
@@ -231,24 +228,95 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                       height: HelperWh.H(context) * .050,
                     ),
                     Textwidget(
-                        text: 'User Id',
+                        text: 'User name',
                         style: TextStyle(
                           color: colours.greydark,
                         )),
-                    Textformfieldwidget(
-                      controller: userid,
-                      validation: (value) {
-                        if (value!.isEmpty) {
-                          return 'required';
+                    // Textformfieldwidget(
+                    //   controller: userid,
+                    //   validation: (value) {
+                    //     if (value!.isEmpty) {
+                    //       return 'required';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
+
+                    StreamBuilder<QuerySnapshot>(
+                      stream: helper.getUser(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
                         }
-                        return null;
+                        List<UserModel> userlist = [];
+                        userlist = snapshot.data!.docs.map((e) {
+                          return UserModel.fromJsone(
+                              e.data() as Map<String, dynamic>);
+                        }).toList();
+
+                        return SizedBox(
+                          width: HelperWh.W(context) * .85,
+                          child: DropdownButton<String>(
+                            hint: Text('SELECT USER NAME'),
+                            items: userlist.map((e) {
+                              return DropdownMenuItem(
+                                value: e.email.toString(),
+                                child: Text(
+                                  e.email.toString(),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              log(value.toString());
+                              _selectedUser = value;
+                            },
+                          ),
+                        );
                       },
                     ),
                     SizedBox(
                       height: HelperWh.H(context) * .020,
                     ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: helper.getHr(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        List<UserModel> userlist = [];
+                        userlist = snapshot.data!.docs.map((e) {
+                          return UserModel.fromJsone(
+                              e.data() as Map<String, dynamic>);
+                        }).toList();
+
+                        return SizedBox(
+                          width: HelperWh.W(context) * .85,
+                          child: DropdownButton<String>(
+                            hint: Text('SELECT SiteSuper NAME'),
+                            items: userlist.map((e) {
+                              return DropdownMenuItem(
+                                value: e.email.toString(),
+                                child: Text(
+                                  e.email.toString(),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              log(value.toString());
+                              _selectedUser = value;
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: HelperWh.H(context) * .020,
+                    ),
+
                     Textwidget(
-                        text: 'Name',
+                        text: 'HR Name',
                         style: TextStyle(
                           color: colours.greydark,
                         )),
@@ -276,6 +344,7 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                       height: HelperWh.H(context) * .010,
                     ),
                     Textformfieldwidget(
+                      inputType: TextInputType.number,
                       controller: amountController,
                       validation: (value) {
                         if (value!.isEmpty) {
@@ -313,6 +382,7 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                     ),
                     Textwidget(text: 'incentive', style: TextStyle()),
                     Textformfieldwidget(
+                      inputType: TextInputType.number,
                       controller: incetive,
                       validation: (value) {
                         if (value!.isEmpty) {
@@ -347,12 +417,13 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                             builder: (context, helper, child) {
                               return ElevatedButton(
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {
+                                  if (formKey.currentState!.validate() &&
+                                      _selectedTime != null) {
                                     helper
                                         .addSalery(
                                       Addsalerymodel(
                                         name: nameController.text,
-                                        userid: userid.text,
+                                        userid: _selectedUser.toString(),
                                         salery: amountController.text,
                                         saleryadddate: _selectedTime!
                                             .format(context)
@@ -383,6 +454,12 @@ class _HrAddSaleryState extends State<HrAddSalery> {
                                         );
                                       },
                                     );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content:
+                                          Text('Add Field the Field is Empty'),
+                                    ));
                                   }
                                 },
                                 child: Text('Add',

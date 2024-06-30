@@ -74,7 +74,7 @@ class _NavigationTabState extends State<NavigationTab> {
             buildListTileTitle(
                 "Expense",
                 2,
-                Icons.remove_red_eye,
+                Icons.money,
                 () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -92,7 +92,7 @@ class _NavigationTabState extends State<NavigationTab> {
             buildListTileTitle(
                 "hr",
                 4,
-                Icons.notifications_active,
+                Icons.person_2_outlined,
                 () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -119,7 +119,7 @@ class _NavigationTabState extends State<NavigationTab> {
             buildListTileTitle(
                 "notofication",
                 6,
-                Icons.question_mark,
+                Icons.notifications_active,
                 () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -128,7 +128,7 @@ class _NavigationTabState extends State<NavigationTab> {
             buildListTileTitle(
                 "feedback",
                 6,
-                Icons.question_mark,
+                Icons.feedback,
                 () => Navigator.push(
                     context,
                     MaterialPageRoute(
